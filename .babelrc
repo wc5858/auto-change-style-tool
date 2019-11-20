@@ -1,0 +1,48 @@
+
+{
+  "env":{
+    "node": {
+      "presets": [
+        "react",
+        ["env", {
+          "modules": false,
+          "targets": {
+            "node": "current"
+          }
+        }]
+      ],
+      "plugins": [
+        "syntax-dynamic-import",
+        "transform-runtime",
+        "transform-object-rest-spread",
+        "babel-plugin-transform-class-properties"
+      ]
+    },
+    "web": {
+      "presets": [
+        "react",
+        ["env", {
+          "modules": false,
+          "targets": {
+            "browsers": ["last 2 versions", "safari >= 7"]
+          }
+        }]
+      ],
+      "plugins": [
+        "react-hot-loader/babel",
+        "transform-object-assign",
+        "syntax-dynamic-import",
+        "transform-runtime",
+        "transform-object-rest-spread",
+        "babel-plugin-transform-class-properties",
+        ["import", {
+          "libraryName": "antd",
+          "libraryDirectory": "lib",
+          "style": true
+        }]
+      ]
+    }
+  },
+  
+  "comments": false
+}

@@ -1,0 +1,11 @@
+export const CREATE_COLOR = 'CREATE_COLOR';
+export const FIND_COLOR = 'FIND_COLOR';
+export const COLOR_DATA = 'COLOR_DATA';
+export const DELETE_COLOR = 'DELETE_COLOR';
+
+export const CREATE_TASK = 'CREATE_TASK';
+
+export const CREATE_COMPONENT = 'CREATE_COMPONENT';
+export const FIND_COMPONENT = 'FIND_COMPONENT';
+export const COMPONENT_DATA = 'COMPONENT_DATA';
+export const DELETE_COMPONENT = 'DELETE_COMPONENT';
