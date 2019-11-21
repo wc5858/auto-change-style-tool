@@ -4,12 +4,13 @@ module.exports = app => {
   return class AppController extends app.Controller {
     async index() {
       const { ctx } = this;
-      const { color, component } = ctx.service;
-      const [ colorData, componentData ] = await Promise.all([color.find(), component.find()]);
+      const { color, component, task } = ctx.service;
+      const [ colorData, componentData, taskData ] = await Promise.all([color.find(), component.find(), task.find()]);
       await ctx.render('app.js', {
         url: ctx.url,
         colorData,
-        componentData
+        componentData,
+        taskData
       });
     }
 

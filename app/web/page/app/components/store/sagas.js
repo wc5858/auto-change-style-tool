@@ -5,6 +5,8 @@ import {
   FIND_COLOR,
   COLOR_DATA,
   CREATE_TASK,
+  FIND_TASK,
+  TASK_DATA,
   CREATE_COMPONENT,
   FIND_COMPONENT,
   DELETE_COMPONENT,
@@ -74,6 +76,22 @@ const createTaskAsync = function*(action) {
   }
 };
 
+const findTaskAsync = function*(showMessage = true) {
+  const response = yield call(axios, {
+    method: 'post',
+    url: '/api/v1/task/find'
+  });
+  if (response.data && response.data.success) {
+    showMessage && message.success('操作成功！');
+    yield put({
+      type: TASK_DATA,
+      data: response.data.data
+    });
+  } else {
+    message.error('获取数据失败');
+  }
+};
+
 const createComponentAsync = function*(action) {
   const response = yield call(axios, {
     method: 'post',
@@ -125,6 +143,7 @@ const watcher = function*() {
   yield takeEvery(DELETE_COLOR, deleteColorAsync);
 
   yield takeEvery(CREATE_TASK, createTaskAsync);
+  yield takeEvery(FIND_TASK, findTaskAsync);
 
   yield takeEvery(CREATE_COMPONENT, createComponentAsync);
   yield takeEvery(FIND_COMPONENT, findComponentAsync);

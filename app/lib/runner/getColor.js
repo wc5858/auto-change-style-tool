@@ -1,5 +1,4 @@
 const drivers = require('../util/drivers');
-const { Builder } = require('selenium-webdriver');
 const getStyle = require('../component/getStyle');
 
 const mergeColorData = function(datas) {

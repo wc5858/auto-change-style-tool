@@ -1,41 +1,50 @@
-const changeColor = require('../lib/runner/changeColor');
+const TaskExecutor = require('../lib/runner/TaskExecutor');
 
 module.exports = app => {
   return class TaskController extends app.Controller {
     async createTask() {
       const { ctx } = this;
-      const { color } = ctx.service;
-      const { colorDataId, url } = ctx.request.body;
-      const colorData = await color.findOne(colorDataId);
-      changeColor({ url, colorData })
-      // const res = await color.create(
-      //   Object.assign(data, {
-      //     state: '执行中'
-      //   })
-      // );
-      // 异步执行任务，无需等待任务完成
-      // const id = res._id;
-      // const start = +new Date();
-      // getColor(data)
-      //   .then(colorData => {
-      //     color.update(id, {
-      //       state: '执行成功',
-      //       time: +new Date() - start,
-      //       bgColor: colorData.bgColorData,
-      //       fontColor: colorData.fontColorData
-      //     });
-      //   })
-      //   .catch(e => {
-      //     console.log(e)
-      //     color.update(id, {
-      //       state: '执行失败',
-      //       time: +new Date() - start,
-      //       err: e.message
-      //     });
-      //   });
-      // 先返回创建任务成功
+      const { color, task } = ctx.service;
+      const { colorDataId, url, site } = ctx.request.body;
+      const res = await task.create({
+        url,
+        site,
+        state: '执行中'
+      });
+      const runner = async () => {
+        const colorData = await color.findOne(colorDataId);
+        const taskExecutor = new TaskExecutor({ url, colorData, site });
+        await taskExecutor.init();
+        await taskExecutor.changeColor();
+        return taskExecutor.finish();
+      };
+      const id = res._id;
+      runner()
+        .then(taskList => {
+          task.update(id, {
+            state: '执行结束',
+            taskList
+          });
+        })
+        .catch(e => {
+          console.log(e);
+          task.update(id, {
+            state: '执行失败',
+            err: e.message
+          });
+        });
       ctx.body = {
         success: true
+      };
+    }
+
+    async findTask() {
+      const { ctx } = this;
+      const { task } = ctx.service;
+      const data = await task.find();
+      ctx.body = {
+        success: true,
+        data
       };
     }
   };

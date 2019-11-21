@@ -4,6 +4,8 @@ export const COLOR_DATA = 'COLOR_DATA';
 export const DELETE_COLOR = 'DELETE_COLOR';
 
 export const CREATE_TASK = 'CREATE_TASK';
+export const FIND_TASK = 'FIND_TASK';
+export const TASK_DATA = 'TASK_DATA';
 
 export const CREATE_COMPONENT = 'CREATE_COMPONENT';
 export const FIND_COMPONENT = 'FIND_COMPONENT';

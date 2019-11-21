@@ -3,6 +3,7 @@ import {
   FIND_COLOR,
   DELETE_COLOR,
   CREATE_TASK,
+  FIND_TASK,
   CREATE_COMPONENT,
   FIND_COMPONENT,
   DELETE_COMPONENT
@@ -25,6 +26,10 @@ export const deleteColor = id => ({
 export const createTask = data => ({
   type: CREATE_TASK,
   data
+});
+
+export const findTask = () => ({
+  type: FIND_TASK
 });
 
 export const createComponent = data => ({

@@ -1,13 +1,24 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { createTask } from '../store/actions';
-import { Row, Modal, Button, Table } from 'antd';
+import { createTask, findTask } from '../store/actions';
+import { Row, Modal, Button, Table, Steps } from 'antd';
 import CreateTask from '../subComponents/createTask';
+
+const { Step } = Steps;
 
 class Home extends Component {
   state = {
+    current: 0,
     loading: false,
     visible: false
+  };
+
+  onChange = current => {
+    this.setState({ current });
+  };
+
+  onExpand = () => {
+    this.setState({ current: 0 });
   };
 
   showModal = () => {
@@ -44,14 +55,98 @@ class Home extends Component {
   };
 
   render() {
-    const { visible, loading } = this.state;
+    const { visible, loading, current } = this.state;
+    const { data, findTask } = this.props;
+    const columns = [
+      {
+        title: 'Site',
+        dataIndex: 'site',
+        key: 'site'
+      },
+      {
+        title: 'url',
+        dataIndex: 'url',
+        key: 'url'
+      },
+      {
+        title: 'State',
+        dataIndex: 'state',
+        key: 'state'
+      }
+      // ,
+      // {
+      //   title: 'Action',
+      //   key: 'action',
+      //   render: record => (
+      //     <span>
+      //       <a onClick={() => deleteComponent(record._id)}>Delete</a>
+      //     </span>
+      //   )
+      // }
+    ];
+    const extraInfo = (data, name) =>
+      data && (
+        <div>
+          <p style={{ margin: 0 }}>
+            <label style={{ fontWeight: 700 }}>{name}:</label>
+          </p>
+          <p style={{ margin: 0 }}>{JSON.stringify(data, null, 4)}</p>
+        </div>
+      );
     return (
       <div className="redux-nav-item">
         <div>
           <Button type="primary" onClick={this.showModal}>
             新建风格更换任务
           </Button>
+          <Button
+            type="primary"
+            icon="redo"
+            style={{ marginLeft: '10px' }}
+            onClick={findTask}
+          >
+            刷新数据
+          </Button>
         </div>
+        <Row style={{ marginTop: '20px' }}>
+          <Table
+            columns={columns}
+            onExpand={this.onExpand}
+            expandedRowRender={record => (
+              <div>
+                {extraInfo(record.err, 'Error')}
+                {record.taskList && (
+                  <Steps
+                    type="navigation"
+                    size="small"
+                    current={current}
+                    onChange={this.onChange}
+                    style={{
+                      marginBottom: 60,
+                      boxShadow: '0px -1px 0 0 #e8e8e8 inset'
+                    }}
+                  >
+                    {record.taskList.map(item => (
+                      <Step
+                        title={item.name}
+                        subTitle={item.time / 1000 + 's'}
+                        status={item.success ? 'finish' : 'error'}
+                        description={
+                          item.screenshot ? (
+                            <img src={item.screenshot} width="120" />
+                          ) : (
+                            item.error || ''
+                          )
+                        }
+                      />
+                    ))}
+                  </Steps>
+                )}
+              </div>
+            )}
+            dataSource={data}
+          />
+        </Row>
         <Modal
           width={800}
           visible={visible}
@@ -80,7 +175,7 @@ class Home extends Component {
 }
 
 const mapStateToProps = state => ({
-  list: state.list
+  data: state.taskData || []
 });
 
-export default connect(mapStateToProps, { createTask })(Home);
+export default connect(mapStateToProps, { createTask, findTask })(Home);

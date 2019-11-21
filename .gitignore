@@ -88,3 +88,4 @@ typings/
 .dynamodb/
 
 run/
+public/*.png

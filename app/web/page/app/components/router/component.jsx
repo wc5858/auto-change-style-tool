@@ -126,7 +126,7 @@ class Component extends React.Component {
                 {extraInfo(record.err, 'Error')}
               </div>
             )}
-            dataSource={data.reverse()}
+            dataSource={data}
           />
         </Row>
         <Modal
