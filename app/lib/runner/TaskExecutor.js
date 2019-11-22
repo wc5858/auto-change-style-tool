@@ -1,5 +1,6 @@
 const drivers = require('../util/drivers');
 const change = require('../component/changeColor');
+const optimization = require('../component/optimization');
 const screenshot = require('../util/screenshot');
 
 class TaskExecutor {
@@ -27,7 +28,10 @@ class TaskExecutor {
       if (typeof callback === 'function') {
         try {
           await callback(assignedOptions);
-          const fileName = await screenshot(`${site}-${name}-${+new Date()}`, this.driver);
+          const fileName = await screenshot(
+            `${site}-${name}-${+new Date()}`,
+            this.driver
+          );
           this.taskList.push({
             name,
             success: true,
@@ -35,7 +39,7 @@ class TaskExecutor {
             time: new Date() - this.time
           });
         } catch (error) {
-          console.log(error)
+          console.log(error);
           this.taskList.push({
             name,
             success: false,
@@ -62,6 +66,12 @@ class TaskExecutor {
     await this.taskWrapper(async options => {
       const { colorData } = options;
       await change(this.driver, colorData);
+    }, 'changeColor')(options);
+  }
+
+  async optimization(options) {
+    await this.taskWrapper(async options => {
+      await optimization(this.driver);
     }, 'changeColor')(options);
   }
 

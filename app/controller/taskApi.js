@@ -16,6 +16,7 @@ module.exports = app => {
         const taskExecutor = new TaskExecutor({ url, colorData, site });
         await taskExecutor.init();
         await taskExecutor.changeColor();
+        await taskExecutor.optimization();
         return taskExecutor.finish();
       };
       const id = res._id;
