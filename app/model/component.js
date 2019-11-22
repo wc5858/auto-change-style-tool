@@ -23,7 +23,7 @@ module.exports = app => {
     time: {
       type: Number
     },
-    fileId: String
+    filename: String
   });
 
   return mongoose.model('Component', schema);

@@ -4,8 +4,8 @@ module.exports = app => {
   return class TaskController extends app.Controller {
     async createTask() {
       const { ctx } = this;
-      const { color, task } = ctx.service;
-      const { colorDataId, url, site } = ctx.request.body;
+      const { color, task, component, fs } = ctx.service;
+      const { colorDataId, url, site, componentDataId } = ctx.request.body;
       const res = await task.create({
         url,
         site,
@@ -13,8 +13,11 @@ module.exports = app => {
       });
       const runner = async () => {
         const colorData = await color.findOne(colorDataId);
-        const taskExecutor = new TaskExecutor({ url, colorData, site });
+        const componentRecord = await component.findOne(componentDataId);
+        const componentData = JSON.parse(await fs.read(componentRecord.filename));
+        const taskExecutor = new TaskExecutor({ url, colorData, site, componentData });
         await taskExecutor.init();
+        await taskExecutor.replaceComponent();
         await taskExecutor.changeColor();
         await taskExecutor.optimization();
         return taskExecutor.finish();

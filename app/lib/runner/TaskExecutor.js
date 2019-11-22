@@ -1,6 +1,7 @@
 const drivers = require('../util/drivers');
 const change = require('../component/changeColor');
 const optimization = require('../component/optimization');
+const replaceComponent = require('../component/replaceComponent');
 const screenshot = require('../util/screenshot');
 
 class TaskExecutor {
@@ -72,12 +73,19 @@ class TaskExecutor {
   async optimization(options) {
     await this.taskWrapper(async options => {
       await optimization(this.driver);
-    }, 'changeColor')(options);
+    }, 'optimization')(options);
+  }
+
+  async replaceComponent(options) {
+    await this.taskWrapper(async options => {
+      const { componentData } = options;
+      await replaceComponent(this.driver, componentData);
+    }, 'replaceComponent')(options);
   }
 
   finish() {
     this.ended = true;
-    this.driver.quit();
+    // this.driver.quit();
     return this.taskList;
   }
 }

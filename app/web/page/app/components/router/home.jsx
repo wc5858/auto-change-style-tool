@@ -32,11 +32,12 @@ class Home extends Component {
     this.setState({ loading: true });
     this.refs.taskForm.validateFields((err, values) => {
       if (!err) {
-        const { url, site, colorDataId } = values;
+        const { url, site, colorDataId, componentDataId } = values;
         const data = {
           url,
           site,
-          colorDataId
+          colorDataId,
+          componentDataId
         };
         createTask(data);
         this.setState({
@@ -115,7 +116,7 @@ class Home extends Component {
             expandedRowRender={record => (
               <div>
                 {extraInfo(record.err, 'Error')}
-                {record.taskList && (
+                {!!record.taskList && (
                   <Steps
                     type="navigation"
                     size="small"
@@ -135,7 +136,7 @@ class Home extends Component {
                           item.screenshot ? (
                             <img src={item.screenshot} width="120" />
                           ) : (
-                            item.error || ''
+                            item.error && JSON.stringify(item.error)
                           )
                         }
                       />

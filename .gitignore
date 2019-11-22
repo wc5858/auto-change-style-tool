@@ -89,3 +89,4 @@ typings/
 
 run/
 public/*.png
+public/*.html

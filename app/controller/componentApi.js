@@ -6,7 +6,7 @@ module.exports = app => {
       const { ctx } = this;
       const { component, fs } = ctx.service;
       const data = ctx.request.body;
-      
+
       // 创建任务
       const res = await component.create(
         Object.assign(data, {
@@ -17,12 +17,16 @@ module.exports = app => {
       const id = res._id;
       const start = +new Date();
       getComponent(data)
-        .then(async data => {
-          const file = await fs.write(JSON.stringify(data), data.site + new Date());
+        .then(async json => {
+          const file = await fs.write(
+            JSON.stringify(json),
+            `${data.site}-${+new Date()}`
+          );
+          console.log(file);
           await component.update(id, {
             state: '执行成功',
             time: +new Date() - start,
-            fileId: file._id
+            filename: file.filename
           });
         })
         .catch(e => {

@@ -79,6 +79,11 @@ class Component extends React.Component {
         key: 'pac'
       },
       {
+        title: 'Filename',
+        dataIndex: 'filename',
+        key: 'filename'
+      },
+      {
         title: 'Action',
         key: 'action',
         render: record => (

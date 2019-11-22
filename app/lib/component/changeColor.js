@@ -12,7 +12,6 @@ module.exports = async function(driver, colorData) {
 
       const originBgColorData = data.colorData.bgColor;
       const originFontColorData = data.colorData.fontColor;
-      console.log(originBgColorData)
       const cssData = {};
       const bgColorData = {};
       const fontColorData = {};

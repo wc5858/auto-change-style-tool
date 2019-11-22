@@ -4,8 +4,8 @@ import { Form, Input, Select } from 'antd';
 
 class CreateTask extends Component {
   render() {
-    const { form, colorData } = this.props;
-    const { getFieldDecorator, getFieldValue } = form;
+    const { form, colorData, componentData } = this.props;
+    const { getFieldDecorator } = form;
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -46,16 +46,33 @@ class CreateTask extends Component {
             ]
           })(<Input />)}
         </Form.Item>
+        <Form.Item label="组件数据源">
+          {getFieldDecorator('componentDataId', {
+            initialValue: componentData[0]._id
+          })(
+            <Select>
+              {componentData
+                .filter(item => !item.err)
+                .map(({ _id, site }) => (
+                  <Option value={_id} key={_id}>
+                    {site}
+                  </Option>
+                ))}
+            </Select>
+          )}
+        </Form.Item>
         <Form.Item label="颜色数据源">
           {getFieldDecorator('colorDataId', {
             initialValue: colorData[0]._id
           })(
             <Select>
-              {colorData.map(({ _id, site }) => (
-                <Option value={_id} key={_id}>
-                  {site}
-                </Option>
-              ))}
+              {colorData
+                .filter(item => !item.err)
+                .map(({ _id, site }) => (
+                  <Option value={_id} key={_id}>
+                    {site}
+                  </Option>
+                ))}
             </Select>
           )}
         </Form.Item>
@@ -66,7 +83,8 @@ class CreateTask extends Component {
 
 const WrappedCreateTask = Form.create({ name: 'create_task' })(
   connect(state => ({
-    colorData: state.colorData
+    colorData: state.colorData,
+    componentData: state.componentData
   }))(CreateTask)
 );
 export default WrappedCreateTask;

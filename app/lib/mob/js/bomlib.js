@@ -55,10 +55,10 @@ function startSegmentation(win, pac, pdc, returnType, pverbose) {
     processLogicStructureMain(page, 0, 1, undefined);
     buildGrid();
     processImportance(page);
-    console.log(page)
+    // console.log(page)
     // clearGrid();
-    console.log(getViXML())
-    console.log(getWPrima(page))
+    // console.log(getViXML())
+    // console.log(getWPrima(page))
     // console.log(getRecord(page,""))
     switch(returnType.toLowerCase()) {
         case "vixml": return(getViXML());
@@ -612,7 +612,7 @@ function BOMType(element) {
         return "CONTENT";
     if (isContentContainer(element))
         return "CONTENT_CONTAINER";
-    console.log(element)
+    // console.log(element)
     if (isContainer(element))
         return "CONTAINER";
     if (isTabular(element))

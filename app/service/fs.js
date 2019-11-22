@@ -1,12 +1,12 @@
-const { createModel } = require('mongoose-gridfs');
+const { createBucket } = require('mongoose-gridfs');
 const Readable = require('stream').Readable;
 const Service = require('egg').Service;
 const toString = require('stream-to-string');
 
 const attachmentPromise = (stream, name) => {
-  const attachment = createModel();
   return new Promise((resolve, reject) => {
-    attachment.write(
+    const bucket = createBucket({ bucketName: 'fs' });
+    bucket.writeFile(
       { filename: `${name}.txt`, contentType: 'text/plain' },
       stream,
       (error, file) => {
@@ -28,9 +28,9 @@ class FsSevice extends Service {
 
     return await attachmentPromise(s, name);
   }
-  async read(_id) {
-    const attachment = createModel();
-    const readStream = attachment.read({ _id });
+  async read(filename) {
+    const attachment = createBucket({ bucketName: 'fs' });
+    const readStream = attachment.readFile({ filename });
 
     return await toString(readStream);
   }
