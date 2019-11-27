@@ -2,10 +2,17 @@ const difflib = require('difflib');
 const synonyms = require('synonyms');
 
 const similarity = (dom1, dom2, k = 0.5) => {
-  return (
-    k * structuralSimilarity(dom1.tagSequence, dom2.tagSequence) +
-    (1 - k) * styleSimilarity(dom1.classList, dom2.classList)
-  );
+  let cur = new Date();
+  const s1 = structuralSimilarity(dom1.tagSequence, dom2.tagSequence);
+  const time1 = new Date() - cur;
+  cur = new Date();
+  const s2 = styleSimilarity(dom1.classList, dom2.classList);
+  const time2 = new Date() - cur;
+  return {
+    s: k * s1 + (1 - k) * s2,
+    time1,
+    time2
+  };
 };
 
 const structuralSimilarity = (tags1, tags2) => {
@@ -29,16 +36,16 @@ const styleSimilarity = (classList1, classList2) => {
         if (word) {
           set.add(word);
           // 查找同义词库
-          const res = synonyms(word);
-          if (res && typeof res === 'object') {
-            for (const j of Object.values(res)) {
-              for (const k of j) {
-                set.add(k);
-              }
-            }
-          } else {
-            // console.log(res, word)
-          }
+          // const res = synonyms(word);
+          // if (res && typeof res === 'object') {
+          //   for (const j of Object.values(res)) {
+          //     for (const k of j) {
+          //       set.add(k);
+          //     }
+          //   }
+          // } else {
+          //   // console.log(res, word)
+          // }
         }
       }
     }

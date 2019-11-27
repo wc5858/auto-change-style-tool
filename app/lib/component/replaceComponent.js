@@ -81,10 +81,14 @@ module.exports = async function(
   const list = getLeafComponent(node);
   const map = {};
   const maxs = [];
+  let sum1 = 0;
+  let sum2 = 0;
   for (const i of list) {
     let max = 0;
     for (const j of data) {
-      const score = similarity(i, j);
+      const { s: score, time1, time2 } = similarity(i, j);
+      sum1 += time1;
+      sum2 += time2;
       if (score > max) {
         max = score;
         i.similarity = j;
@@ -105,6 +109,8 @@ module.exports = async function(
       );
     }
   }
+
+  console.log(sum1,sum2);
 
   const usedId = [];
 
