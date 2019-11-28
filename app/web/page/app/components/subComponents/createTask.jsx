@@ -62,7 +62,7 @@ class CreateTask extends Component {
           )}
         </Form.Item>
         <Divider>更换颜色</Divider>
-        <Form.Item label="">
+        <Form.Item label="颜色数据源">
           {getFieldDecorator('colorDataId', {
             initialValue: colorData[0]._id
           })(
