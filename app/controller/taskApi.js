@@ -11,18 +11,22 @@ module.exports = app => {
         site,
         state: '执行中'
       });
+      const id = res._id;
       const runner = async () => {
         const colorData = await color.findOne(colorDataId);
         const componentRecord = await component.findOne(componentDataId);
         const componentData = JSON.parse(await fs.read(componentRecord.filename));
-        const taskExecutor = new TaskExecutor({ url, colorData, site, componentData });
+        const taskExecutor = new TaskExecutor({ url, colorData, site, componentData }, taskList => {
+          task.update(id, {
+            taskList
+          });
+        });
         await taskExecutor.init();
         await taskExecutor.replaceComponent();
         await taskExecutor.changeColor();
         await taskExecutor.optimization();
         return taskExecutor.finish();
       };
-      const id = res._id;
       runner()
         .then(taskList => {
           task.update(id, {

@@ -5,8 +5,10 @@ const replaceComponent = require('../component/replaceComponent');
 const screenshot = require('../util/screenshot');
 
 class TaskExecutor {
-  constructor(options, headless = true) {
+  constructor(options, onEachTaskEnd) {
     this.options = options;
+    this.onEachTaskEnd =
+      typeof onEachTaskEnd === 'function' ? onEachTaskEnd : () => {};
     this.taskList = [];
     this.ended = false;
     this.time = new Date();
@@ -24,10 +26,10 @@ class TaskExecutor {
         });
         return;
       }
-      const { site } = this.options;
-      const assignedOptions = Object.assign(this.options, options);
       if (typeof callback === 'function') {
         try {
+          const { site } = this.options;
+          const assignedOptions = Object.assign(this.options, options);
           await callback(assignedOptions);
           const fileName = await screenshot(
             `${site}-${name}-${+new Date()}`,
@@ -51,6 +53,7 @@ class TaskExecutor {
           this.driver.quit();
         }
       }
+      this.onEachTaskEnd(this.taskList);
       this.time = new Date();
     };
   }
