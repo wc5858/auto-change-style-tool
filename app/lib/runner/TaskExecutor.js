@@ -81,8 +81,12 @@ class TaskExecutor {
 
   async replaceComponent(options) {
     await this.taskWrapper(async options => {
-      const { componentData } = options;
-      await replaceComponent(this.driver, componentData);
+      const { componentData, pac, threshold1, threshold2 } = options;
+      await replaceComponent(this.driver, componentData, {
+        pac,
+        threshold1,
+        threshold2
+      });
     }, 'replaceComponent')(options);
   }
 

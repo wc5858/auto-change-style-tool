@@ -32,15 +32,7 @@ class Home extends Component {
     this.setState({ loading: true });
     this.refs.taskForm.validateFields((err, values) => {
       if (!err) {
-        const { url, site, colorDataId, componentDataId, bgMappingType } = values;
-        const data = {
-          url,
-          site,
-          colorDataId,
-          componentDataId,
-          bgMappingType
-        };
-        createTask(data);
+        createTask(values);
         this.setState({
           loading: false,
           visible: false

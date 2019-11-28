@@ -134,6 +134,7 @@ class AddComponent extends Component {
         </Form.Item>
         <Form.Item label="分片粒度">
           {getFieldDecorator('pac', {
+            initialValue: 5,
             rules: [
               {
                 required: true,

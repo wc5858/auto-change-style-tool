@@ -65,13 +65,10 @@ const replaceNodeContents = (node, source) => {
   return node;
 };
 
-const t1 = 0.45;
-const t2 = 0.3;
-
 module.exports = async function(
   driver,
   data,
-  options = { threshold1: t1, threshold2: t2, pac: 5 }
+  options = { threshold1: 0.45, threshold2: 0.3, pac: 5 }
 ) {
   let node = await seg(driver, {
     pac: options.pac,

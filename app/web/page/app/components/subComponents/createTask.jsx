@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Form, Input, Select, Divider } from 'antd';
+import { Form, Input, Select, Divider, Icon, Tooltip } from 'antd';
 
 class CreateTask extends Component {
   render() {
@@ -46,6 +46,7 @@ class CreateTask extends Component {
             ]
           })(<Input />)}
         </Form.Item>
+        <Divider>更换组件</Divider>
         <Form.Item label="组件数据源">
           {getFieldDecorator('componentDataId', {
             initialValue: componentData[0]._id
@@ -60,6 +61,46 @@ class CreateTask extends Component {
                 ))}
             </Select>
           )}
+        </Form.Item>
+        <Form.Item label="分片粒度">
+          {getFieldDecorator('pac', {
+            initialValue: 5,
+            rules: [
+              {
+                required: true,
+                validator: (rule, value) => value >= 1 && value <= 10,
+                message: '请输入1到10的数字!'
+              }
+            ]
+          })(<Input placeholder="1到10之间，越大代表粒度越粗" />)}
+        </Form.Item>
+        <Form.Item
+          label={
+            <span>
+              停止阈值&nbsp;
+              <Tooltip title="相似度达到此值时不继续匹配，设置为1则总是不停止">
+                <Icon type="question-circle-o" />
+              </Tooltip>
+            </span>
+          }
+        >
+          {getFieldDecorator('threshold1', {
+            initialValue: 0.45
+          })(<Input />)}
+        </Form.Item>
+        <Form.Item
+          label={
+            <span>
+              下限阈值&nbsp;
+              <Tooltip title="相似度未达到此值时不发生匹配，设置为0则总是发生替换">
+                <Icon type="question-circle-o" />
+              </Tooltip>
+            </span>
+          }
+        >
+          {getFieldDecorator('threshold2', {
+            initialValue: 0.3
+          })(<Input />)}
         </Form.Item>
         <Divider>更换颜色</Divider>
         <Form.Item label="颜色数据源">
@@ -82,12 +123,11 @@ class CreateTask extends Component {
             initialValue: 'area'
           })(
             <Select>
-              {['area', 'times']
-                .map(item => (
-                  <Option value={item} key={item}>
-                    {item}
-                  </Option>
-                ))}
+              {['area', 'times'].map(item => (
+                <Option value={item} key={item}>
+                  {item}
+                </Option>
+              ))}
             </Select>
           )}
         </Form.Item>
