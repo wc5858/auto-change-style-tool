@@ -5,10 +5,11 @@ module.exports = app => {
     async createTask() {
       const { ctx } = this;
       const { color, task, component, fs } = ctx.service;
-      const { colorDataId, url, site, componentDataId } = ctx.request.body;
+      const { colorDataId, url, site, componentDataId, ...settings } = ctx.request.body;
       const res = await task.create({
         url,
         site,
+        settings,
         state: '执行中'
       });
       const id = res._id;
@@ -16,7 +17,7 @@ module.exports = app => {
         const colorData = await color.findOne(colorDataId);
         const componentRecord = await component.findOne(componentDataId);
         const componentData = JSON.parse(await fs.read(componentRecord.filename));
-        const taskExecutor = new TaskExecutor({ url, colorData, site, componentData }, taskList => {
+        const taskExecutor = new TaskExecutor({ url, colorData, site, componentData, ...settings }, taskList => {
           task.update(id, {
             taskList
           });

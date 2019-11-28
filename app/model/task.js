@@ -8,6 +8,9 @@ module.exports = app => {
     url: {
       type: String
     },
+    settings : {
+      type: Object
+    },
     taskList: {
       type: []
     },

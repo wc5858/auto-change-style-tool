@@ -68,8 +68,8 @@ class TaskExecutor {
 
   async changeColor(options) {
     await this.taskWrapper(async options => {
-      const { colorData } = options;
-      await change(this.driver, colorData);
+      const { colorData, bgMappingType } = options;
+      await change(this.driver, colorData, bgMappingType);
     }, 'changeColor')(options);
   }
 

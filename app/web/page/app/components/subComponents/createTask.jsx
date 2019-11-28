@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Form, Input, Select } from 'antd';
+import { Form, Input, Select, Divider } from 'antd';
 
 class CreateTask extends Component {
   render() {
@@ -61,6 +61,7 @@ class CreateTask extends Component {
             </Select>
           )}
         </Form.Item>
+        <Divider>更换颜色</Divider>
         <Form.Item label="颜色数据源">
           {getFieldDecorator('colorDataId', {
             initialValue: colorData[0]._id
@@ -71,6 +72,20 @@ class CreateTask extends Component {
                 .map(({ _id, site }) => (
                   <Option value={_id} key={_id}>
                     {site}
+                  </Option>
+                ))}
+            </Select>
+          )}
+        </Form.Item>
+        <Form.Item label="颜色数据源">
+          {getFieldDecorator('bgMappingType', {
+            initialValue: 'area'
+          })(
+            <Select>
+              {['area', 'times']
+                .map(item => (
+                  <Option value={item} key={item}>
+                    {item}
                   </Option>
                 ))}
             </Select>

@@ -1,14 +1,15 @@
 const getBundle = require('../util/getBundle');
 
-module.exports = async function(driver, colorData) {
+// bgMappingType: area or times
+module.exports = async function(driver, colorData, bgMappingType = 'area') {
   const bundle = getBundle('./app/lib/browser/util.js', 'util');
 
   // 传入styleData，在浏览器里执行脚本更换样式
   return await driver.executeScript(
     function() {
-      let data = arguments[0];
+      const data = arguments[0];
       eval(data.bundle);
-      let util = require('util');
+      const util = require('util');
 
       const originBgColorData = data.colorData.bgColor;
       const originFontColorData = data.colorData.fontColor;
@@ -97,7 +98,7 @@ module.exports = async function(driver, colorData) {
       const originBgColors = analysisBgColor(originBgColorData);
       const originFontColors = analysisFontColor(originFontColorData);
 
-      const bgMappingType = 'area';
+      const bgMappingType = data.bgMappingType;
       const fontMmappingType = 'length';
       // TODO：这边还有一些硬编码，可以优化下
       const establishMapping = () => {
@@ -130,7 +131,8 @@ module.exports = async function(driver, colorData) {
     },
     {
       colorData,
-      bundle
+      bundle,
+      bgMappingType
     }
   );
 };

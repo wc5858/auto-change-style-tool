@@ -32,19 +32,20 @@ class Home extends Component {
     this.setState({ loading: true });
     this.refs.taskForm.validateFields((err, values) => {
       if (!err) {
-        const { url, site, colorDataId, componentDataId } = values;
+        const { url, site, colorDataId, componentDataId, bgMappingType } = values;
         const data = {
           url,
           site,
           colorDataId,
-          componentDataId
+          componentDataId,
+          bgMappingType
         };
         createTask(data);
         this.setState({
           loading: false,
           visible: false
         });
-        // this.refs.taskForm.resetFields();
+        this.refs.taskForm.resetFields();
       } else {
         this.setState({ loading: false });
       }
@@ -115,6 +116,7 @@ class Home extends Component {
             onExpand={this.onExpand}
             expandedRowRender={record => (
               <div>
+                {extraInfo(record.settings, 'Settings')}
                 {extraInfo(record.err, 'Error')}
                 {!!record.taskList && (
                   <Steps
