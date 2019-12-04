@@ -124,8 +124,12 @@ class Home extends Component {
                     {record.taskList.map(item => (
                       <Step
                         title={item.name}
-                        subTitle={item.time / 1000 + 's'}
-                        status={item.success ? 'finish' : 'error'}
+                        subTitle={
+                          item.wait ? '执行中...' : item.time / 1000 + 's'
+                        }
+                        status={
+                          item.wait ? 'wait' : item.success ? 'finish' : 'error'
+                        }
                         description={
                           item.screenshot ? (
                             <img src={item.screenshot} width="120" />

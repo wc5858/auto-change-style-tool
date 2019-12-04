@@ -5,7 +5,13 @@ module.exports = app => {
     async createTask() {
       const { ctx } = this;
       const { color, task, component, fs } = ctx.service;
-      const { colorDataId, url, site, componentDataId, ...settings } = ctx.request.body;
+      const {
+        colorDataId,
+        url,
+        site,
+        componentDataId,
+        ...settings
+      } = ctx.request.body;
       const res = await task.create({
         url,
         site,
@@ -16,12 +22,24 @@ module.exports = app => {
       const runner = async () => {
         const colorData = await color.findOne(colorDataId);
         const componentRecord = await component.findOne(componentDataId);
-        const componentData = JSON.parse(await fs.read(componentRecord.filename));
-        const taskExecutor = new TaskExecutor({ url, colorData, site, componentData, ...settings }, taskList => {
-          task.update(id, {
-            taskList
-          });
-        });
+        const componentData = JSON.parse(
+          await fs.read(componentRecord.filename)
+        );
+        const taskExecutor = new TaskExecutor(
+          { url, colorData, site, componentData, ...settings },
+          {
+            beforeEachTask: taskList => {
+              task.update(id, {
+                taskList
+              })
+            },
+            onEachTaskEnd: taskList => {
+              task.update(id, {
+                taskList
+              })
+            }
+          }
+        );
         await taskExecutor.init();
         await taskExecutor.replaceComponent();
         await taskExecutor.changeColor();

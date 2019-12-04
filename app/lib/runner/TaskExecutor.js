@@ -5,10 +5,12 @@ const replaceComponent = require('../component/replaceComponent');
 const screenshot = require('../util/screenshot');
 
 class TaskExecutor {
-  constructor(options, onEachTaskEnd) {
+  constructor(options, { onEachTaskEnd, beforeEachTask }) {
     this.options = options;
     this.onEachTaskEnd =
       typeof onEachTaskEnd === 'function' ? onEachTaskEnd : () => {};
+    this.beforeEachTask =
+      typeof beforeEachTask === 'function' ? beforeEachTask : () => {};
     this.taskList = [];
     this.ended = false;
     this.time = new Date();
@@ -22,11 +24,19 @@ class TaskExecutor {
         this.taskList.push({
           name,
           success: false,
+          wait: true,
           time: new Date() - this.time
         });
         return;
       }
       if (typeof callback === 'function') {
+        const cur = {
+          name,
+          success: false,
+          wait: true
+        };
+        this.taskList.push(cur);
+        this.beforeEachTask(this.taskList);
         try {
           const { site } = this.options;
           const assignedOptions = Object.assign(this.options, options);
@@ -35,25 +45,19 @@ class TaskExecutor {
             `${site}-${name}-${+new Date()}`,
             this.driver
           );
-          this.taskList.push({
-            name,
-            success: true,
-            screenshot: fileName,
-            time: new Date() - this.time
-          });
+          cur.success = true;
+          cur.wait = false;
+          cur.screenshot = fileName;
         } catch (error) {
           console.log(error);
-          this.taskList.push({
-            name,
-            success: false,
-            time: new Date() - this.time,
-            error
-          });
+          cur.wait = false;
+          cur.error = error;
           this.ended = true;
           this.driver.quit();
         }
+        cur.time = new Date() - this.time;
+        this.onEachTaskEnd(this.taskList);
       }
-      this.onEachTaskEnd(this.taskList);
       this.time = new Date();
     };
   }
@@ -92,7 +96,7 @@ class TaskExecutor {
 
   finish() {
     this.ended = true;
-    // this.driver.quit();
+    this.driver.quit();
     return this.taskList;
   }
 }
