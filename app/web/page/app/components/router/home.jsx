@@ -3,13 +3,16 @@ import { connect } from 'react-redux';
 import { createTask, findTask } from '../store/actions';
 import { Row, Modal, Button, Table, Steps } from 'antd';
 import CreateTask from '../subComponents/createTask';
+import HtmlModal from '../subComponents/htmlModal';
 
 const { Step } = Steps;
 
 class Home extends Component {
   state = {
     loading: false,
-    visible: false
+    visible: false,
+    htmlModalVisible: false,
+    html: ''
   };
 
   onExpand = () => {
@@ -19,6 +22,25 @@ class Home extends Component {
   showModal = () => {
     this.setState({
       visible: true
+    });
+  };
+
+  showHtmlModal = html => {
+    this.setState({
+      htmlModalVisible: true,
+      html
+    });
+  };
+
+  htmlModalOk = () => {
+    this.setState({
+      htmlModalVisible: false
+    });
+  };
+
+  htmlModalCancel = () => {
+    this.setState({
+      htmlModalVisible: false
     });
   };
 
@@ -44,7 +66,7 @@ class Home extends Component {
   };
 
   render() {
-    const { visible, loading } = this.state;
+    const { visible, loading, htmlModalVisible, html } = this.state;
     const { data, findTask } = this.props;
     const columns = [
       {
@@ -136,11 +158,21 @@ class Home extends Component {
                           item.wait ? 'wait' : item.success ? 'finish' : 'error'
                         }
                         description={
-                          item.screenshot ? (
-                            <img src={item.screenshot} width="120" />
-                          ) : (
-                            item.error && JSON.stringify(item.error)
-                          )
+                          <div>
+                            {!!item.screenshot && (
+                              <img src={item.screenshot} width="120" />
+                            )}
+                            {!!(item.result && item.result.bodyHTML) && (
+                              <div
+                                onClick={() =>
+                                  this.showHtmlModal(item.result.bodyHTML)
+                                }
+                              >
+                                点击查看网页
+                              </div>
+                            )}
+                            {!!item.error && JSON.stringify(item.error)}
+                          </div>
                         }
                       />
                     ))}
@@ -173,6 +205,12 @@ class Home extends Component {
         >
           <CreateTask ref="taskForm" />
         </Modal>
+        <HtmlModal
+          visible={htmlModalVisible}
+          onOk={this.htmlModalOk}
+          onCancel={this.htmlModalCancel}
+          html={html}
+        />
       </div>
     );
   }

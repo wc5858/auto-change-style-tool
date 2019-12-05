@@ -40,7 +40,7 @@ class TaskExecutor {
         try {
           const { site } = this.options;
           const assignedOptions = Object.assign(this.options, options);
-          await callback(assignedOptions);
+          const result = await callback(assignedOptions);
           const fileName = await screenshot(
             `${site}-${name}-${+new Date()}`,
             this.driver
@@ -48,6 +48,9 @@ class TaskExecutor {
           cur.success = true;
           cur.wait = false;
           cur.screenshot = fileName;
+          if (result) {
+            cur.result = result;
+          }
         } catch (error) {
           console.log(error);
           cur.wait = false;
@@ -86,7 +89,7 @@ class TaskExecutor {
   async replaceComponent(options) {
     await this.taskWrapper(async options => {
       const { componentData, pac, threshold1, threshold2 } = options;
-      await replaceComponent(this.driver, componentData, {
+      return await replaceComponent(this.driver, componentData, {
         pac,
         threshold1,
         threshold2

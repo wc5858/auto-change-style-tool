@@ -202,3 +202,15 @@
     margin-top: 40px;
     text-align: center;
 }
+
+[data-replaced="1"]:hover::after {
+    content: '被替换组件';
+    -webkit-text-fill-color: initial;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    color: #cd2a19 !important;
+    border: solid 3px;
+}

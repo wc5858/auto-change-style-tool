@@ -62,6 +62,7 @@ const replaceNodeContents = (node, source) => {
       }
     }
   }
+  node.isReplaced = true;
   return node;
 };
 
@@ -127,8 +128,8 @@ module.exports = async function(
 
   replaceNode(node);
 
-  let html = '<!DOCTYPE html><head><meta charset="utf-8"></head>';
-  html += rebuildHTML(node) + '</html>';
+  const bodyHTML = rebuildHTML(node);
+  const html =  `<!DOCTYPE html><head><meta charset="utf-8"></head>${bodyHTML}</html>`;
 
   const name = await generatorHTML(html);
 
@@ -144,4 +145,7 @@ module.exports = async function(
   await driver.executeScript(function() {
     document.body.style['overflow-x'] = 'hidden';
   });
+  return {
+    bodyHTML
+  };
 };

@@ -153,6 +153,8 @@ const rebuildHTML = treeNode => {
   const tag = treeNode.info.tag;
   return `<${tag} class="" parent="${treeNode.info.pre}" ${
     tag == 'IMG' ? `src="${treeNode.info.src}"` : ''
+  } ${treeNode.id ? `data-id="${treeNode.id}"` : ''} ${
+    treeNode.isReplaced ? 'data-replaced="1"' : ''
   } style='${mergeCss(treeNode.info.css)}'>${innerHTML}</${tag}>`;
 };
 

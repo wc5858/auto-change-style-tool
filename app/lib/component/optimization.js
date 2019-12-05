@@ -13,8 +13,19 @@ module.exports = async function(driver) {
       const dealTree = node => {
         // 颜色修复
         if (isElement(node)) {
-          node.style['-webkit-text-fill-color'] = 'unset';
-          const bgColor = tinycolor(getComputedStyle(node).backgroundColor);
+          node.style['-webkit-text-fill-color'] = 'initial';
+          let bgColor = getComputedStyle(node).backgroundColor;
+          // 考虑背景全透明的情况
+          const isTransparent = color => color.indexOf('rgba') === 0 && color.split(',')[3] === ' 0)';
+          if (isTransparent(bgColor)) {
+            console.log(bgColor)
+            let par = node.parentNode;
+            while(isTransparent(getComputedStyle(par).backgroundColor) && par) {
+              par = par.parentNode;
+            }
+            bgColor = getComputedStyle(par).backgroundColor;
+          }
+          bgColor = tinycolor(bgColor);
           const color = tinycolor(getComputedStyle(node).color);
           if (
             !tinycolor.isReadable(bgColor, color, {
