@@ -61,6 +61,17 @@ class Home extends Component {
         title: 'State',
         dataIndex: 'state',
         key: 'state'
+      },
+      {
+        title: 'ColorDataName',
+        dataIndex: 'colorDataName',
+        key: 'colorDataName'
+      },
+      {
+        title: 'ComponentDataNames',
+        dataIndex: 'componentDataNames',
+        key: 'componentDataNames',
+        render: record => (record || []).join(',')
       }
       // ,
       // {

@@ -8,6 +8,12 @@ module.exports = app => {
     url: {
       type: String
     },
+    colorDataName: {
+      type: String
+    },
+    componentDataNames: {
+      type: [String]
+    },
     settings : {
       type: Object
     },

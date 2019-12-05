@@ -49,9 +49,9 @@ class CreateTask extends Component {
         <Divider>更换组件</Divider>
         <Form.Item label="组件数据源">
           {getFieldDecorator('componentDataId', {
-            initialValue: componentData[0]._id
+            initialValue: [componentData[0]._id]
           })(
-            <Select>
+            <Select mode="multiple">
               {componentData
                 .filter(item => !item.err)
                 .map(({ _id, site }) => (

@@ -21,22 +21,44 @@ module.exports = app => {
       const id = res._id;
       const runner = async () => {
         const colorData = await color.findOne(colorDataId);
-        const componentRecord = await component.findOne(componentDataId);
-        const componentData = JSON.parse(
-          await fs.read(componentRecord.filename)
+        // 允许组件多个输入源
+        const componentRecords = await Promise.all(
+          componentDataId.map(id => component.findOne(id))
+        );
+        task.update(id, {
+          colorDataName: colorData.site,
+          componentDataNames: componentRecords.map(i => i.site)
+        });
+        const componentDatas = (
+          await Promise.all(
+            componentRecords.map(componentRecord =>
+              fs.read(componentRecord.filename)
+            )
+          )
+        ).map(JSON.parse);
+        // 快速展平二维数组的一个小技巧
+        const flattenComponentData = Array.prototype.concat.apply(
+          [],
+          componentDatas
         );
         const taskExecutor = new TaskExecutor(
-          { url, colorData, site, componentData, ...settings },
+          {
+            url,
+            colorData,
+            site,
+            componentData: flattenComponentData,
+            ...settings
+          },
           {
             beforeEachTask: taskList => {
               task.update(id, {
                 taskList
-              })
+              });
             },
             onEachTaskEnd: taskList => {
               task.update(id, {
                 taskList
-              })
+              });
             }
           }
         );
