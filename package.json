@@ -14,8 +14,10 @@
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
   },
   "dependencies": {
+    "@antv/data-set": "^0.10.2",
     "antd": "^3.25.0",
     "axios": "^0.19.0",
+    "bizcharts": "^3.5.6",
     "browserify": "^16.5.0",
     "difflib": "^0.2.4",
     "egg": "^2.1.0",

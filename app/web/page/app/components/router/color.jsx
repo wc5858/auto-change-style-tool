@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import { Row, Modal, Button, Table } from 'antd';
+import { Row, Modal, Button, Table, Collapse } from 'antd';
 import { connect } from 'react-redux';
-import {  createColor, findColor, deleteColor } from '../store/actions';
+import { createColor, findColor, deleteColor } from '../store/actions';
 import AddColor from '../subComponents/addColor';
+import ShowColors from '../subComponents/showColors';
+
+const { Panel } = Collapse;
 
 class Color extends Component {
   state = {
@@ -71,47 +74,71 @@ class Color extends Component {
       {
         title: 'Action',
         key: 'action',
-        render: (record) => (
+        render: record => (
           <span>
-            <a onClick={ () => deleteColor(record._id) }>Delete</a>
+            <a onClick={() => deleteColor(record._id)}>Delete</a>
           </span>
         )
       }
     ];
 
-    const extraInfo = (data, name) => (data && (
-      <div>
-        <p style={{ margin: 0 }}><label style={{ fontWeight: 700 }}>{name}:</label></p>
-        <p style={{ margin: 0 }}>{JSON.stringify(data, null, 4)}</p>
-      </div>
-    ))
+    const extraInfo = (data, name) =>
+      data && (
+        <Panel header={name} key={name}>
+          <p>{JSON.stringify(data, null, 4)}</p>
+        </Panel>
+      );
 
+    const showColor = (data, key, name) =>
+      data && (
+        <Panel header={name} key={name}>
+          <ShowColors
+            colorData={Object.entries(data).map(([color, info]) => ({
+              name: color,
+              value: info[key]
+            }))}
+          />
+        </Panel>
+      );
     return (
       <div className="redux-nav-item">
         <div>
           <Button type="primary" onClick={this.showModal}>
             新建色彩数据
           </Button>
-          <Button type="primary" icon="redo" style={{ marginLeft: '10px' }} onClick={findColor}>
+          <Button
+            type="primary"
+            icon="redo"
+            style={{ marginLeft: '10px' }}
+            onClick={findColor}
+          >
             刷新数据
           </Button>
         </div>
         <Row style={{ marginTop: '20px' }}>
           <Table
             columns={columns}
-            expandedRowRender={record => <div>
-              <p style={{ margin: 0 }}><label style={{ fontWeight: 700 }}>SubPages:</label></p>
-              <p style={{ margin: 0 }}>{record.subPages.join(',')}</p>
-              {
-                extraInfo(record.bgColor, 'BgColorData')
-              }
-              {
-                extraInfo(record.fontColor, 'FontColorData')
-              }
-              {
-                extraInfo(record.err, 'Error')
-              }
-            </div>}
+            expandedRowRender={record => (
+              <Collapse defaultActiveKey={['SubPages']}>
+                <Panel header="SubPages" key="SubPages">
+                  <p>{record.subPages.join(',')}</p>
+                </Panel>
+                {extraInfo(record.bgColor, 'BgColorData（原始数据）')}
+                {showColor(record.bgColor, 'areaRatio', '背景色按面积分布情况')}
+                {showColor(
+                  record.bgColor,
+                  'timesRatio',
+                  '背景色按出现频率分布情况'
+                )}
+                {extraInfo(record.fontColor, 'FontColorData（原始数据）')}
+                {showColor(
+                  record.fontColor,
+                  'lengthRatio',
+                  '字体颜色按字符数分布情况'
+                )}
+                {extraInfo(record.err, 'Error')}
+              </Collapse>
+            )}
             dataSource={data}
           />
         </Row>
@@ -146,7 +173,8 @@ const mapStateToProps = state => ({
   data: state.colorData || []
 });
 
-export default connect(
-  mapStateToProps,
-  { createColor, findColor, deleteColor }
-)(Color);
+export default connect(mapStateToProps, {
+  createColor,
+  findColor,
+  deleteColor
+})(Color);

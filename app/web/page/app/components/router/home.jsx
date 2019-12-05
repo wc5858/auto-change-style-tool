@@ -8,13 +8,8 @@ const { Step } = Steps;
 
 class Home extends Component {
   state = {
-    current: 0,
     loading: false,
     visible: false
-  };
-
-  onChange = current => {
-    this.setState({ current });
   };
 
   onExpand = () => {
@@ -49,7 +44,7 @@ class Home extends Component {
   };
 
   render() {
-    const { visible, loading, current } = this.state;
+    const { visible, loading } = this.state;
     const { data, findTask } = this.props;
     const columns = [
       {
@@ -114,8 +109,7 @@ class Home extends Component {
                   <Steps
                     type="navigation"
                     size="small"
-                    current={current}
-                    onChange={this.onChange}
+                    current={record.taskList.length - 1}
                     style={{
                       marginBottom: 60,
                       boxShadow: '0px -1px 0 0 #e8e8e8 inset'
