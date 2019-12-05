@@ -18,7 +18,6 @@ module.exports = async function(driver) {
           // 考虑背景全透明的情况
           const isTransparent = color => color.indexOf('rgba') === 0 && color.split(',')[3] === ' 0)';
           if (isTransparent(bgColor)) {
-            console.log(bgColor)
             let par = node.parentNode;
             while(isTransparent(getComputedStyle(par).backgroundColor) && par) {
               par = par.parentNode;
