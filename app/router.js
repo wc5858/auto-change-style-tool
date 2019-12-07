@@ -3,6 +3,7 @@ module.exports = app => {
   app.get('/', app.controller.home.index);
   app.get('/color', app.controller.home.index);
   app.get('/component', app.controller.home.index);
+  app.get('/catcher', app.controller.home.index);
 
   app.post('/api/v1/color/create', app.controller.colorApi.createColor);
   app.post('/api/v1/color/find', app.controller.colorApi.findColor);

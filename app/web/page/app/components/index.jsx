@@ -3,6 +3,7 @@ import { Route, Link, Switch } from 'react-router-dom';
 import Home from './router/home';
 import Color from './router/color';
 import Cp from './router/component';
+import Catcher from './router/catcher';
 
 import { Menu, Icon } from 'antd';
 
@@ -37,8 +38,14 @@ class App extends React.Component {
               <Icon type="build" />组件数据
             </Link>
           </Menu.Item>
+          <Menu.Item key="catcher">
+            <Link to="/catcher">
+              <Icon type="build" />事件捕捉
+            </Link>
+          </Menu.Item>
         </Menu>
         <Switch>
+          <Route path="/catcher" component={Catcher} />
           <Route path="/component" component={Cp} />
           <Route path="/color" component={Color} />
           <Route path="/" component={Home} />
