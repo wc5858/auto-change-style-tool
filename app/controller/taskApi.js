@@ -50,6 +50,7 @@ module.exports = app => {
             ...settings
           },
           {
+            headless: true,
             beforeEachTask: taskList => {
               task.update(id, {
                 taskList

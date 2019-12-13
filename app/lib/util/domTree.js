@@ -151,7 +151,7 @@ const rebuildHTML = treeNode => {
       ? treeNode.content
       : '';
   const tag = treeNode.info.tag;
-  return `<${tag} class="" parent="${treeNode.info.pre}" ${
+  return `<${tag} class="${treeNode.info.class.join(' ')}" parent="${treeNode.info.pre}" ${
     tag == 'IMG' ? `src="${treeNode.info.src}"` : ''
   } ${treeNode.id ? `data-id="${treeNode.id}"` : ''} ${
     treeNode.isReplaced ? 'data-replaced="1"' : ''

@@ -31,11 +31,14 @@
     "extend": "~3.0.0",
     "g": "^2.0.1",
     "history": "^4.7.2",
+    "is-utf8": "^0.2.1",
     "js-cookie": "^2.2.1",
     "lodash": "^4.17.4",
     "mockjs": "^1.0.1-beta3",
     "moment": "^2.17.1",
     "mongoose-gridfs": "^1.2.14",
+    "postcss": "^7.0.24",
+    "postcss-safe-parser": "^4.0.1",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-redux": "^5.0.6",
@@ -48,7 +51,8 @@
     "selenium-webdriver": "^4.0.0-alpha.5",
     "sharp": "^0.23.3",
     "stream-to-string": "^1.2.0",
-    "synonyms": "^1.0.1"
+    "synonyms": "^1.0.1",
+    "urijs": "^1.19.2"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.3",

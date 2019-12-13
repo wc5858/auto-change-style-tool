@@ -13,7 +13,11 @@ class HtmlModal extends Component {
         width={'80%'}
       >
         <div style={{ maxWidth: '1800px', overflowX: 'scroll' }}>
-          <div dangerouslySetInnerHTML={{ __html: html }} />
+          <div dangerouslySetInnerHTML={{ __html: html }} onClick={e => {
+            if (e.target.getAttribute('data-replaced')) {
+              console.log(e.target)
+            }
+          }}/>
         </div>
       </Modal>
     );

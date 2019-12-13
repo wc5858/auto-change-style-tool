@@ -1,16 +1,18 @@
 const drivers = require('../util/drivers');
 const change = require('../component/changeColor');
+const searchUsedCSS = require('../component/searchUsedCSS');
 const optimization = require('../component/optimization');
 const replaceComponent = require('../component/replaceComponent');
 const screenshot = require('../util/screenshot');
 
 class TaskExecutor {
-  constructor(options, { onEachTaskEnd, beforeEachTask }) {
+  constructor(options, { onEachTaskEnd, beforeEachTask, headless = true }) {
     this.options = options;
     this.onEachTaskEnd =
       typeof onEachTaskEnd === 'function' ? onEachTaskEnd : () => {};
     this.beforeEachTask =
       typeof beforeEachTask === 'function' ? beforeEachTask : () => {};
+    this.headless = headless;
     this.taskList = [];
     this.ended = false;
     this.time = new Date();
@@ -41,13 +43,15 @@ class TaskExecutor {
           const { site } = this.options;
           const assignedOptions = Object.assign(this.options, options);
           const result = await callback(assignedOptions);
-          const fileName = await screenshot(
-            `${site}-${name}-${+new Date()}`,
-            this.driver
-          );
+          if (this.headless) {
+            const fileName = await screenshot(
+              `${site}-${name}-${+new Date()}`,
+              this.driver
+            );
+            cur.screenshot = fileName;
+          }
           cur.success = true;
           cur.wait = false;
-          cur.screenshot = fileName;
           if (result) {
             cur.result = result;
           }
@@ -67,9 +71,10 @@ class TaskExecutor {
 
   async init(options) {
     await this.taskWrapper(async options => {
-      this.driver = await drivers.getChromeDriver();
+      this.driver = await drivers.getChromeDriver(this.headless);
       const { url } = options;
       await this.driver.get(url);
+      await searchUsedCSS(this.driver);
     }, 'init')(options);
   }
 
