@@ -117,16 +117,14 @@ module.exports = async function(driver, colorData, bgMappingType = 'area') {
 
       // console.log(bgColorData);
 
-      util.addCss(document.body);
+      // util.addCss(document.body);
       // 对每个元素都进行处理
       for (let k = 0; k < all.length; k++) {
         util.replaceColor(all[k], bgColorData, fontColorData);
       }
-      html += document.body.outerHTML + '</body></html>';
-      location.href = 'about:blank';
-      document.write(html);
-      //util.addCss(document.querySelector('html'))
-      // console.log(html);
+      // html += document.body.outerHTML + '</body></html>';
+      // location.href = 'about:blank';
+      // document.write(html);
       return html;
     },
     {

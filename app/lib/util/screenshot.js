@@ -21,13 +21,14 @@ module.exports = async function(name, driver) {
       window.scrollTo(0, position);
     }, position);
     const imgData = await driver.takeScreenshot();
+    const top =
+      position + windowHeight > scrollHeight
+        ? scrollHeight - (windowHeight + position - scrollHeight)
+        : position;
     buffers.push({
       input: new Buffer(imgData, 'base64'),
       left: 0,
-      top:
-        position + windowHeight > scrollHeight
-          ? windowHeight - windowHeight
-          : position
+      top
     });
     position += windowHeight;
   }

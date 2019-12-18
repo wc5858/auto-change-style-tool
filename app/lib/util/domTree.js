@@ -21,6 +21,7 @@ const getNodeInfo = node => {
   const data = {
     bomtype: node.getAttribute('bomtype') || null,
     pre: node.getAttribute('parent'),
+    style: node.getAttribute('style'),
     offsetWidth: node.offsetWidth,
     offsetHeight: node.offsetHeight,
     scrollWidth: node.scrollWidth,
@@ -29,7 +30,8 @@ const getNodeInfo = node => {
     offsetTop: node.offsetTop,
     css: getCss(node),
     tag: node.tagName,
-    class: node.classList.value.split(' ')
+    class: node.classList.value.split(' '),
+    usedCss: node.getAttribute('data-used-css') || null
   };
   if (data.tag == 'IMG') {
     data.src = node.currentSrc;
@@ -135,7 +137,7 @@ const createTree = domNode => {
   return null;
 };
 
-const rebuildHTML = treeNode => {
+const rebuildHTML = (treeNode, isReplaced) => {
   if (!treeNode) {
     return '';
   }
@@ -146,16 +148,17 @@ const rebuildHTML = treeNode => {
     return '';
   }
   let innerHTML = treeNode.children
-    ? treeNode.children.reduce((pre, cur) => pre + rebuildHTML(cur), '')
+    ? treeNode.children.reduce((pre, cur) => pre + rebuildHTML(cur, treeNode.isReplaced), '')
     : treeNode.content
       ? treeNode.content
       : '';
   const tag = treeNode.info.tag;
+  const style = treeNode.isReplaced || isReplaced ? mergeCss(treeNode.info.css) : treeNode.info.style;
   return `<${tag} class="${treeNode.info.class.join(' ')}" parent="${treeNode.info.pre}" ${
     tag == 'IMG' ? `src="${treeNode.info.src}"` : ''
   } ${treeNode.id ? `data-id="${treeNode.id}"` : ''} ${
     treeNode.isReplaced ? 'data-replaced="1"' : ''
-  } style='${mergeCss(treeNode.info.css)}'>${innerHTML}</${tag}>`;
+  } style='${style}' data-used-css='${treeNode.info.usedCss}'>${innerHTML}</${tag}>`;
 };
 
 module.exports = {

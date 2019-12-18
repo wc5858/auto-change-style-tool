@@ -3,8 +3,15 @@ const convUrlToAbs = require('./convUrlToAbs');
 const searchAllStyleSheets = document => {
   const res = [];
   const search = styleSheet => {
+    let rules;
+    // 在某些特殊情形下（如css表中存在svg背景图片），该css表会被CORS机制ban掉
+    try {
+      rules = styleSheet.cssRules;
+    } catch {
+      return;
+    }
     res.push(styleSheet);
-    [...styleSheet.cssRules].forEach(cssRule => {
+    [...rules].forEach(cssRule => {
       if (cssRule instanceof CSSImportRule) {
         search(cssRule.styleSheet);
       }

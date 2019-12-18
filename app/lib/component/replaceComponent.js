@@ -73,7 +73,7 @@ module.exports = async function(
 ) {
   let node = await seg(driver, {
     pac: options.pac,
-    returnType: 'wprima',
+    returnType: 'null',
     showBox: false
   });
   const list = getLeafComponent(node);
@@ -108,9 +108,9 @@ module.exports = async function(
     }
   }
 
-  console.log(sum1,sum2);
-
   const usedId = [];
+
+  let originCssUsed = new Set();
 
   const replaceNode = node => {
     if (node.children) {
@@ -120,6 +120,7 @@ module.exports = async function(
           usedId.push(element.id);
           node.children[i] = map[element.id];
         } else {
+          originCssUsed.add((element.info && element.info.usedCss) || '');
           replaceNode(element);
         }
       }
@@ -129,7 +130,9 @@ module.exports = async function(
   replaceNode(node);
 
   const bodyHTML = rebuildHTML(node);
-  const html =  `<!DOCTYPE html><head><meta charset="utf-8"></head>${bodyHTML}</html>`;
+  const html = `<!DOCTYPE html><head><meta charset="utf-8"><style>${[
+    ...originCssUsed
+  ].join('\n')}</style></head>${bodyHTML}</html>`;
 
   const name = await generatorHTML(html);
 

@@ -7,22 +7,39 @@ module.exports = async function(driver) {
     function() {
       let data = arguments[0];
       eval(data.bundle);
-      const isElement = node => {
-        return node ? node.nodeType == (Node.ELEMENT_NODE || 1) : false;
-      };
+      // const isElement = node => {
+      //   return node ? node.nodeType == (Node.ELEMENT_NODE || 1) : false;
+      // };
+      const isElement = node => node instanceof Element;
+      // for debugger
+      // let _getComputedStyle = getComputedStyle;
+      // getComputedStyle = function(e) {
+      //   try {
+      //     console.log(e)
+      //     return _getComputedStyle(e);
+      //   } catch (error) {
+      //     console.log(error);
+      //   }
+      // };
       const dealTree = node => {
         // 颜色修复
         if (isElement(node)) {
           node.style['-webkit-text-fill-color'] = 'initial';
           let bgColor = getComputedStyle(node).backgroundColor;
           // 考虑背景全透明的情况
-          const isTransparent = color => color.indexOf('rgba') === 0 && color.split(',')[3] === ' 0)';
+          const isTransparent = color =>
+            color.indexOf('rgba') === 0 && color.split(',')[3] === ' 0)';
           if (isTransparent(bgColor)) {
             let par = node.parentNode;
-            while(isTransparent(getComputedStyle(par).backgroundColor) && par) {
+            while (
+              isElement(par) && isTransparent(getComputedStyle(par).backgroundColor) &&
+              par
+            ) {
               par = par.parentNode;
             }
-            bgColor = getComputedStyle(par).backgroundColor;
+            if (isElement(par)) {
+              bgColor = getComputedStyle(par).backgroundColor;
+            }
           }
           bgColor = tinycolor(bgColor);
           const color = tinycolor(getComputedStyle(node).color);
@@ -59,7 +76,10 @@ module.exports = async function(driver) {
                 // if (i.style.display === 'block') {
                 // 块元素判断是否真实发生文本溢出
                 //console.log(l * parseInt(getComputedStyle(i).fontSize), clientWidth)
-                if (l * parseInt(getComputedStyle(i).fontSize) > clientWidth) {
+                if (
+                  isElement(i) &&
+                  l * parseInt(getComputedStyle(i).fontSize) > clientWidth
+                ) {
                   flag = true;
                   i.style.width = 'auto';
                   i.style.height = 'auto';

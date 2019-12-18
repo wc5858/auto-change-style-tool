@@ -1,4 +1,5 @@
 const drivers = require('../util/drivers');
+const searchUsedCSS = require('../component/searchUsedCSS');
 const seg = require('../component/segmentation');
 const cp = require('../util/component');
 
@@ -9,9 +10,10 @@ module.exports = async function(data) {
     const res = [];
     for (let page of subPages) {
       await driver.get(baseUrl + page);
+      await searchUsedCSS(driver);
       let node = await seg(driver, {
         pac: 4,
-        returnType: 'wprima',
+        returnType: 'null',
         showBox: false
       });
       const list = cp.getLeafComponent(node);

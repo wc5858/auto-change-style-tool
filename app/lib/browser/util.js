@@ -55,18 +55,20 @@ const replaceColor = (el, bgColorData, fontColorData) => {
   let bgColor = /background-color\:rgb\(([^\)]+)/.exec(css);
   let fontColor = /color\:rgb\(([^\)]+)/.exec(css);
   if (bgColor && bgColorData.hasOwnProperty(bgColor[1])) {
-    css = css.replace(
-      /(background-color\:rgb\()([^\)]+)/,
-      '$1' + bgColorData[bgColor[1]].mappedColor
-    );
+    // css = css.replace(
+    //   /(background-color\:rgb\()([^\)]+)/,
+    //   '$1' + bgColorData[bgColor[1]].mappedColor
+    // );
+    el.style.backgroundColor = `rgb(${bgColorData[bgColor[1]].mappedColor})`;
   }
   if (fontColor && fontColorData.hasOwnProperty(fontColor[1])) {
-    css = css.replace(
-      /(color\:rgb\()([^\)]+)/,
-      '$1' + fontColorData[fontColor[1]].mappedColor
-    );
+    // css = css.replace(
+    //   /(color\:rgb\()([^\)]+)/,
+    //   '$1' + fontColorData[fontColor[1]].mappedColor
+    // );
+    el.style.color = `rgb(${fontColorData[fontColor[1]].mappedColor})`;
   }
-  addCss(el, css);
+  // addCss(el, css);
 }
 
 const isText = node => node ? node.nodeType === (Node.TEXT_NODE || 3) : false;

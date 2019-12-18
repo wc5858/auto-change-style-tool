@@ -64,6 +64,7 @@ function startSegmentation(win, pac, pdc, returnType, pverbose) {
         case "vixml": return(getViXML());
         case "wprima": return(getWPrima(page));
         case "record": return(getRecord(page,""));
+        case "null": return(null);
         default: return(getViXML());
     }
 }
