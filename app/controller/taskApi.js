@@ -67,14 +67,20 @@ module.exports = app => {
         await taskExecutor.replaceComponent();
         await taskExecutor.changeColor();
         await taskExecutor.optimization();
-        return taskExecutor.finish();
+        return await taskExecutor.finish();
       };
       runner()
-        .then(taskList => {
-          task.update(id, {
-            state: '执行结束',
-            taskList
-          });
+        .then(result => {
+          if (result.success) {
+            task.update(id, {
+              state: '执行结束',
+              result: result.data
+            });
+          } else {
+            task.update(id, {
+              state: '子任务执行失败'
+            });
+          }
         })
         .catch(e => {
           console.log(e);

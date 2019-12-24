@@ -203,6 +203,10 @@
     text-align: center;
 }
 
+[data-replaced="1"] {
+    position: relative !important;
+}
+
 [data-replaced="1"]:hover::after {
     content: '被替换组件';
     -webkit-text-fill-color: initial;

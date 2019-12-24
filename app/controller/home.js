@@ -5,7 +5,11 @@ module.exports = app => {
     async index() {
       const { ctx } = this;
       const { color, component, task } = ctx.service;
-      const [ colorData, componentData, taskData ] = await Promise.all([color.find(), component.find(), task.find()]);
+      const [colorData, componentData, taskData] = await Promise.all([
+        color.find(),
+        component.find(),
+        task.find()
+      ]);
       await ctx.render('app.js', {
         url: ctx.url,
         colorData,

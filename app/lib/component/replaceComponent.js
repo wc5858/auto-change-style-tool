@@ -130,7 +130,7 @@ module.exports = async function(
   replaceNode(node);
 
   const bodyHTML = rebuildHTML(node);
-  const html = `<!DOCTYPE html><head><meta charset="utf-8"><style>${[
+  const html = `<!DOCTYPE html><head><meta charset="utf-8"><style id="style-merged-used-css">${[
     ...originCssUsed
   ].join('\n')}</style></head>${bodyHTML}</html>`;
 

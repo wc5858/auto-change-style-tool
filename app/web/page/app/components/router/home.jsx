@@ -25,10 +25,11 @@ class Home extends Component {
     });
   };
 
-  showHtmlModal = html => {
+  showHtmlModal = ({ bodyHTML, style = '', cleanCss = '' }) => {
+    console.log(cleanCss)
     this.setState({
       htmlModalVisible: true,
-      html
+      html: `<style>${cleanCss}</style>${bodyHTML}`
     });
   };
 
@@ -94,17 +95,21 @@ class Home extends Component {
         dataIndex: 'componentDataNames',
         key: 'componentDataNames',
         render: record => (record || []).join(',')
+      },
+
+      {
+        title: 'Action',
+        key: 'action',
+        render: record => (
+          <span>
+            {!!record.result && (
+              <a onClick={() => this.showHtmlModal(record.result)}>
+                点击查看网页
+              </a>
+            )}
+          </span>
+        )
       }
-      // ,
-      // {
-      //   title: 'Action',
-      //   key: 'action',
-      //   render: record => (
-      //     <span>
-      //       <a onClick={() => deleteComponent(record._id)}>Delete</a>
-      //     </span>
-      //   )
-      // }
     ];
     const extraInfo = (data, name) =>
       data && (
@@ -161,15 +166,6 @@ class Home extends Component {
                           <div>
                             {!!item.screenshot && (
                               <img src={item.screenshot} width="120" />
-                            )}
-                            {!!(item.result && item.result.bodyHTML) && (
-                              <div
-                                onClick={() =>
-                                  this.showHtmlModal(item.result.bodyHTML)
-                                }
-                              >
-                                点击查看网页
-                              </div>
                             )}
                             {!!item.error && JSON.stringify(item.error)}
                           </div>

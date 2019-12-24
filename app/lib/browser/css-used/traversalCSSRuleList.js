@@ -47,12 +47,16 @@ const traversalCSSRuleList = (doc, cssNodeArr) => {
     }
     if (CSSRuleListItem.type === 'atrule' && CSSRuleListItem.name === 'media') {
       // CSSMediaRule
-      res.normRule.push('\n@media ' + CSSRuleListItem.params + '{');
+      if (CSSRuleListItem.params !== 'all') {
+        res.normRule.push('\n@media ' + CSSRuleListItem.params + '{');
+      }
       cssHelper.mergeobjCss(
         res,
         traversalCSSRuleList(doc, CSSRuleListItem.nodes)
       );
-      res.normRule.push('}');
+      if (CSSRuleListItem.params !== 'all') {
+        res.normRule.push('}');
+      }
       return res;
     }
     if (CSSRuleListItem.type === 'rule' && CSSRuleListItem.selector !== '') {
@@ -65,7 +69,7 @@ const traversalCSSRuleList = (doc, cssNodeArr) => {
   result.forEach(function(ele) {
     cssHelper.mergeobjCss(objCss, ele);
   });
-  if (cssNodeArr.media && cssNodeArr.media.length > 0) {
+  if (cssNodeArr.media && cssNodeArr.media.length > 0 && cssNodeArr.media.mediaText !== 'all') {
     objCss.normRule.splice(1, 0, `@media ${cssNodeArr.media.mediaText}{`);
     objCss.normRule.push('}');
   }

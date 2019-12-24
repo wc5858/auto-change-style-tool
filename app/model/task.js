@@ -25,6 +25,9 @@ module.exports = app => {
     },
     err: {
       type: String
+    },
+    result: {
+      type: Object
     }
   });
 

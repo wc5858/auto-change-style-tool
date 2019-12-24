@@ -2,6 +2,7 @@ const drivers = require('../util/drivers');
 const change = require('../component/changeColor');
 const searchUsedCSS = require('../component/searchUsedCSS');
 const optimization = require('../component/optimization');
+const getResult = require('../component/getResult');
 const replaceComponent = require('../component/replaceComponent');
 const screenshot = require('../util/screenshot');
 
@@ -15,6 +16,7 @@ class TaskExecutor {
     this.headless = headless;
     this.taskList = [];
     this.ended = false;
+    this.result = {};
     this.time = new Date();
   }
 
@@ -60,6 +62,7 @@ class TaskExecutor {
           cur.wait = false;
           cur.error = error;
           this.ended = true;
+          this.result.success = false;
           this.driver.quit();
         }
         cur.time = new Date() - this.time;
@@ -102,10 +105,14 @@ class TaskExecutor {
     }, 'replaceComponent')(options);
   }
 
-  finish() {
+  async finish() {
     this.ended = true;
+    if (this.result.success !== false ) {
+      this.result.success = true;
+      this.result.data = await getResult(this.driver);
+    }
     this.driver.quit();
-    return this.taskList;
+    return this.result;
   }
 }
 
