@@ -12,7 +12,8 @@ class Home extends Component {
     loading: false,
     visible: false,
     htmlModalVisible: false,
-    html: ''
+    html: '',
+    cleanCss: ''
   };
 
   onExpand = () => {
@@ -26,10 +27,10 @@ class Home extends Component {
   };
 
   showHtmlModal = ({ bodyHTML, style = '', cleanCss = '' }) => {
-    console.log(cleanCss)
     this.setState({
       htmlModalVisible: true,
-      html: `<style>${cleanCss}</style>${bodyHTML}`
+      html: `<style>${cleanCss}</style>${bodyHTML}`,
+      cleanCss
     });
   };
 
@@ -67,7 +68,7 @@ class Home extends Component {
   };
 
   render() {
-    const { visible, loading, htmlModalVisible, html } = this.state;
+    const { visible, loading, htmlModalVisible, html, cleanCss } = this.state;
     const { data, findTask } = this.props;
     const columns = [
       {
@@ -206,6 +207,7 @@ class Home extends Component {
           onOk={this.htmlModalOk}
           onCancel={this.htmlModalCancel}
           html={html}
+          cleanCss={cleanCss}
         />
       </div>
     );
