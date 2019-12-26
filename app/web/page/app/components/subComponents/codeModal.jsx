@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Modal, Button } from 'antd';
+import { connect } from 'react-redux';
 import cssbeautify from 'cssbeautify';
 import hljs from 'highlight.js/lib/highlight';
 import css from 'highlight.js/lib/languages/css';
@@ -7,11 +8,9 @@ import 'highlight.js/styles/github.css';
 
 hljs.registerLanguage('css', css);
 
-class HtmlModal extends Component {
+class CodeModal extends Component {
   render() {
-    const { visible, onCancel, code } = this.props;
-    console.log(cssbeautify(code))
-    console.log(hljs.highlight('css', cssbeautify(code)).value)
+    const { visible, onCancel, code, cssData } = this.props;
     return (
       <Modal
         title="css代码"
@@ -20,10 +19,12 @@ class HtmlModal extends Component {
         onCancel={onCancel}
         width={'80%'}
       >
-        <pre style={{height: '70vh'}} dangerouslySetInnerHTML={{ __html: hljs.highlight('css', cssbeautify(code)).value }} />
+        <pre style={{height: '70vh'}} dangerouslySetInnerHTML={{ __html: hljs.highlight('css', cssbeautify(code || cssData)).value }} />
       </Modal>
     );
   }
 }
 
-export default HtmlModal;
+const mapStateToProps = state => ({ cssData: state.cssData || '' });
+
+export default connect(mapStateToProps, { })(CodeModal);

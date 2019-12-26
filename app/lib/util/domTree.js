@@ -153,7 +153,8 @@ const rebuildHTML = (treeNode, isReplaced) => {
       ? treeNode.content
       : '';
   const tag = treeNode.info.tag;
-  const style = treeNode.isReplaced || isReplaced ? mergeCss(treeNode.info.css) : treeNode.info.style;
+  // const style = treeNode.isReplaced || isReplaced ? mergeCss(treeNode.info.css) : treeNode.info.style;
+  const style = mergeCss(treeNode.info.css);
   return `<${tag} class="${treeNode.info.class.join(' ')}" parent="${treeNode.info.pre}" ${
     tag == 'IMG' ? `src="${treeNode.info.src}"` : ''
   } ${treeNode.id ? `data-id="${treeNode.id}"` : ''} ${

@@ -10,7 +10,9 @@ import {
   CREATE_COMPONENT,
   FIND_COMPONENT,
   DELETE_COMPONENT,
-  COMPONENT_DATA
+  COMPONENT_DATA,
+  GET_NANO_CSS,
+  CSS_DATA
 } from './constant';
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -137,6 +139,21 @@ const deleteComponentAsync = function*(action) {
   }
 };
 
+const getNanoCssAsync = function*(action) {
+  const response = yield call(axios, {
+    method: 'post',
+    url: '/api/v1/task/getNanoCss',
+    data: {
+      rawCss: action.rawCss
+    }
+  });
+  console.log(response)
+  yield put({
+    type: CSS_DATA,
+    data: response.data.data
+  });
+};
+
 const watcher = function*() {
   yield takeEvery(CREATE_COLOR, createColorAsync);
   yield takeEvery(FIND_COLOR, findColorAsync);
@@ -144,6 +161,7 @@ const watcher = function*() {
 
   yield takeEvery(CREATE_TASK, createTaskAsync);
   yield takeEvery(FIND_TASK, findTaskAsync);
+  yield takeEvery(GET_NANO_CSS, getNanoCssAsync);
 
   yield takeEvery(CREATE_COMPONENT, createComponentAsync);
   yield takeEvery(FIND_COMPONENT, findComponentAsync);

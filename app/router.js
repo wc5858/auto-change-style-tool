@@ -11,6 +11,7 @@ module.exports = app => {
 
   app.post('/api/v1/task/create', app.controller.taskApi.createTask);
   app.post('/api/v1/task/find', app.controller.taskApi.findTask);
+  app.post('/api/v1/task/getNanoCss', app.controller.taskApi.getNanoCss);
   
   app.post('/api/v1/component/create', app.controller.componentApi.createComponent);
   app.post('/api/v1/component/find', app.controller.componentApi.findComponent);

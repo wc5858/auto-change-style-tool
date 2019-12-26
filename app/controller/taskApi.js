@@ -103,5 +103,14 @@ module.exports = app => {
         data
       };
     }
+
+    async getNanoCss() {
+      const { ctx } = this;
+      const data = ctx.request.body;
+      ctx.body = {
+        success: true,
+        data: await ctx.service.task.getNanoCss(data.rawCss)
+      };
+    }
   };
 };

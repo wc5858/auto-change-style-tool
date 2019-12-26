@@ -12,25 +12,18 @@ const cssnano = require('cssnano')({
 });
 
 class TaskSevice extends Service {
-  async find() {
-    const data = await this.ctx.model.Task.find();
-    // 合并css
-    await Promise.all(
-      data.map(async i => {
-        if (i.result && i.result.style) {
-          const res = await postcss([cssnano]).process(i.result.style, {
-            from: undefined
-          });
-          i.result.cleanCss = res.css;
-          return;
-        }
-      })
-    );
-    return data;
+  async getNanoCss(css) {
+    const res = await postcss([cssnano]).process(css, {
+      from: undefined
+    });
+    return res.css;
   }
-  // async findOne(id) {
-  //   return await this.ctx.model.Task.findById(id);
-  // }
+  async find() {
+    return await this.ctx.model.Task.find();
+  }
+  async findOne(id) {
+    return await this.ctx.model.Task.findById(id);
+  }
   async create(data) {
     return await this.ctx.model.Task.create(data);
   }

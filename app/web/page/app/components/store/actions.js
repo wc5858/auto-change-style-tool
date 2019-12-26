@@ -6,7 +6,8 @@ import {
   FIND_TASK,
   CREATE_COMPONENT,
   FIND_COMPONENT,
-  DELETE_COMPONENT
+  DELETE_COMPONENT,
+  GET_NANO_CSS
 } from './constant';
 
 export const createColor = data => ({
@@ -44,4 +45,9 @@ export const findComponent = () => ({
 export const deleteComponent = id => ({
   type: DELETE_COMPONENT,
   id
+});
+
+export const getNanoCss = rawCss => ({
+  type: GET_NANO_CSS,
+  rawCss
 });
