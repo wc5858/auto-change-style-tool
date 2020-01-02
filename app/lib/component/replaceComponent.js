@@ -98,7 +98,7 @@ module.exports = async function(
     }
     maxs.push(max);
     // 找到匹配项大于这个阈值时才执行替换
-    if (max >= options.threshold2) {
+    if (max > options.threshold2) {
       // 执行一次深拷贝
       const copyNode = JSON.parse(JSON.stringify(i.similarity.node));
       map[i.node.id] = replaceNodeContents(
