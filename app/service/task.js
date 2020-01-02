@@ -19,7 +19,17 @@ class TaskSevice extends Service {
     return res.css;
   }
   async find() {
-    return await this.ctx.model.Task.find();
+    const res = await this.ctx.model.Task.find();
+    // Promise.all(
+    //   res.map(async i => {
+    //     if (i.result && typeof i.result.bodyHTML !== 'string') {
+    //       i.result.bodyHTML = await this.ctx.service.fs.read(
+    //         i.result.bodyHTML.filename
+    //       );
+    //     }
+    //   })
+    // );
+    return res;
   }
   async findOne(id) {
     return await this.ctx.model.Task.findById(id);

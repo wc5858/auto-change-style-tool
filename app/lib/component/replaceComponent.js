@@ -113,6 +113,7 @@ module.exports = async function(
   let originCssUsed = new Set();
 
   const replaceNode = node => {
+    originCssUsed.add((node.info && node.info.usedCss) || '');
     if (node.children) {
       for (let i = 0; i < node.children.length; i++) {
         const element = node.children[i];
@@ -120,7 +121,6 @@ module.exports = async function(
           usedId.push(element.id);
           node.children[i] = map[element.id];
         } else {
-          originCssUsed.add((element.info && element.info.usedCss) || '');
           replaceNode(element);
         }
       }

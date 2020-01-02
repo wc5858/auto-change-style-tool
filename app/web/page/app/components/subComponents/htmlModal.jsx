@@ -7,6 +7,7 @@ import CodeModal from './codeModal';
 const getCss = element => {
   return [...element.querySelectorAll('*')]
     .map(i => i.getAttribute('data-used-css') || '')
+    .filter(i => i !== 'null')
     .join('');
 };
 
@@ -30,9 +31,7 @@ class HtmlModal extends Component {
 
   render() {
     const { visible, onOk, onCancel, html } = this.props;
-    const {
-      visible: codeModalVisible
-    } = this.state;
+    const { visible: codeModalVisible } = this.state;
     return (
       <div>
         <Modal
@@ -60,10 +59,7 @@ class HtmlModal extends Component {
             />
           </div>
         </Modal>
-        <CodeModal
-          visible={codeModalVisible}
-          onCancel={this.handleCancel}
-        />
+        <CodeModal visible={codeModalVisible} onCancel={this.handleCancel} />
       </div>
     );
   }

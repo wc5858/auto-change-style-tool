@@ -4,7 +4,8 @@ const searchAllStyleSheets = document => {
   const res = [];
   const search = styleSheet => {
     let rules;
-    // 在某些特殊情形下（如css表中存在svg背景图片），该css表会被CORS机制ban掉
+    // 在某些特殊情形下，该css表会被CORS机制ban掉
+    // update @2020/1/2: 已从driver层面绕过该限制
     try {
       rules = styleSheet.cssRules;
     } catch {

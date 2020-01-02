@@ -22,6 +22,7 @@ const getNodeInfo = node => {
     bomtype: node.getAttribute('bomtype') || null,
     pre: node.getAttribute('parent'),
     style: node.getAttribute('style'),
+    id: node.getAttribute('id'),
     offsetWidth: node.offsetWidth,
     offsetHeight: node.offsetHeight,
     scrollWidth: node.scrollWidth,
@@ -153,13 +154,13 @@ const rebuildHTML = (treeNode, isReplaced) => {
       ? treeNode.content
       : '';
   const tag = treeNode.info.tag;
-  // const style = treeNode.isReplaced || isReplaced ? mergeCss(treeNode.info.css) : treeNode.info.style;
-  const style = mergeCss(treeNode.info.css);
+  const style = treeNode.isReplaced || isReplaced ? mergeCss(treeNode.info.css) : treeNode.info.style;
+  // const style = mergeCss(treeNode.info.css);
   return `<${tag} class="${treeNode.info.class.join(' ')}" parent="${treeNode.info.pre}" ${
     tag == 'IMG' ? `src="${treeNode.info.src}"` : ''
   } ${treeNode.id ? `data-id="${treeNode.id}"` : ''} ${
     treeNode.isReplaced ? 'data-replaced="1"' : ''
-  } style='${style}' data-used-css='${treeNode.info.usedCss}'>${innerHTML}</${tag}>`;
+  } style='${style}' data-used-css='${treeNode.info.usedCss}' ${treeNode.info.id ? id=`${treeNode.info.id}` : ''}>${innerHTML}</${tag}>`;
 };
 
 module.exports = {
