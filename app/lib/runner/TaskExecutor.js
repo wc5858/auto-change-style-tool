@@ -63,7 +63,7 @@ class TaskExecutor {
           cur.error = error;
           this.ended = true;
           this.result.success = false;
-          this.driver.quit();
+          this.driver.close();
         }
         cur.time = new Date() - this.time;
         this.onEachTaskEnd(this.taskList);
@@ -111,7 +111,7 @@ class TaskExecutor {
       this.result.success = true;
       this.result.data = await getResult(this.driver);
     }
-    this.driver.quit();
+    driver.close();
     return this.result;
   }
 }

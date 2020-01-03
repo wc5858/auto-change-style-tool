@@ -32,6 +32,7 @@ module.exports = async function(data) {
   } catch (e) {
     throw e;
   } finally {
-    driver.quit();
+    // close替代quit，quit存在一个问题，当一个driver被close时，其他所有driver的连接都会被关闭（但那些driver本身不会quit）
+    driver.close();
   }
 };

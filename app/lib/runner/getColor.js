@@ -64,6 +64,6 @@ module.exports = async function(data) {
     // 换了个写法，如果throw new Error(e)，就会丢失错误栈信息
     throw e;
   } finally {
-    driver.quit();
+    driver.close();
   }
 };
