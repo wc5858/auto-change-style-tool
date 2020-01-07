@@ -111,7 +111,7 @@ class TaskExecutor {
       this.result.success = true;
       this.result.data = await getResult(this.driver);
     }
-    driver.close();
+    this.driver.close();
     return this.result;
   }
 }
