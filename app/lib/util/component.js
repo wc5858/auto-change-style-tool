@@ -148,13 +148,7 @@ const getLeafComponent = (node, withHTML = true) => {
   const helper = (node, ancestor) => {
     if (node.children) {
       for (const i of node.children) {
-        if (
-          i.info &&
-          i.info.bomtype &&
-          i.info.bomtype !== 'null' &&
-          i.info.bomtype !== 'PAGE' &&
-          i.info.bomtype !== 'CONTENT'
-        ) {
+        if (i.info && i.info.isBlock) {
           // 祖先组件不是叶组件，删除
           if (ancestor && map.has(ancestor)) {
             map.delete(ancestor);

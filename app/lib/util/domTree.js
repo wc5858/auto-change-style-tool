@@ -22,6 +22,7 @@ const getNodeInfo = node => {
     bomtype: node.getAttribute('bomtype') || null,
     pre: node.getAttribute('parent'),
     style: node.getAttribute('style'),
+    isBlock: node.getAttribute('data-is-block') === '1',
     id: node.getAttribute('id'),
     offsetWidth: node.offsetWidth,
     offsetHeight: node.offsetHeight,

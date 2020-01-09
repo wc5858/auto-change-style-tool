@@ -1057,8 +1057,7 @@ function processLogicalObject(log) {
 	if ((underc/cc)>0.90) { //90% of innerblocks are under size 
 		if (!log.accepted && !log.visited) log.accept();
 	}
-    if (verbose)
-        log.updateBlock();
+    log.updateBlock();
     return(touched);
 }
 
@@ -1253,8 +1252,7 @@ function logicalObject(obj) {
         this.accept();
         blocks.splice(blocks.indexOf(log), 1);
         log = undefined
-        if (verbose)
-            this.updateBlock();
+        this.updateBlock();
     }
 
     //~ this.normW = function() {
@@ -1369,7 +1367,7 @@ function logicalObject(obj) {
         this.textcover = this.textCover();
         this.htmlcover = this.countCover();
         
-        if (verbose) this.updateBlock();
+        this.updateBlock();
     }
 
     this.insertBlock = function() {
@@ -1386,26 +1384,35 @@ function logicalObject(obj) {
     }
 
     this.updateBlock = function() {
-        var aaa = "G:&nbsp;"+this.gran.toFixed(0);
-        var imp = "";
-        if (this.countChildren() == 0) {
-            this.setOn();
-            imp = this.importance;
-        } else {
-            this.hide();
+        if (verbose) {
+            var aaa = "G:&nbsp;"+this.gran.toFixed(0);
+            var imp = "";
+            if (this.countChildren() == 0) {
+                this.setOn();
+                imp = this.importance;
+            } else {
+                this.hide();
+            }
+            var bg = "black";
+            if (this.accepted) bg="red";
+            this.block.innerHTML = "<span visited='true' class='bomauxtext' style='opacity:1;color:black;font-size:12pt;background-color:"+bg+";color:white'>B" + this.getId() + " - " + aaa +" - imp: "+ imp + "</span>";
+            var g = this.dim.x + " " + this.dim.y + " " + this.dim.w + " " + this.dim.h;
+            this.block.setAttribute("bomgeometry", g);
+            this.block.setAttribute("bomtype", this.type);
+            color = colors[this.type];
+            this.block.setAttribute("style", "border : 2px solid black;z-index: 999910000;position:absolute;background-color:transparent;border-color:" + color + ";color:black;font-weight:bold;opacity:1");
+            this.block.style.left = this.dim.x + "px";
+            this.block.style.top = this.dim.y + "px";
+            this.block.style.width = this.dim.w + "px";
+            this.block.style.height = this.dim.h + "px";
         }
-        var bg = "black";
-        if (this.accepted) bg="red";
-        this.block.innerHTML = "<span visited='true' class='bomauxtext' style='opacity:1;color:black;font-size:12pt;background-color:"+bg+";color:white'>B" + this.getId() + " - " + aaa +" - imp: "+ imp + "</span>";
-        var g = this.dim.x + " " + this.dim.y + " " + this.dim.w + " " + this.dim.h;
-        this.block.setAttribute("bomgeometry", g);
-        this.block.setAttribute("bomtype", this.type);
-        color = colors[this.type];
-        this.block.setAttribute("style", "border : 2px solid black;z-index: 999910000;position:absolute;background-color:transparent;border-color:" + color + ";color:black;font-weight:bold;opacity:1");
-        this.block.style.left = this.dim.x + "px";
-        this.block.style.top = this.dim.y + "px";
-        this.block.style.width = this.dim.w + "px";
-        this.block.style.height = this.dim.h + "px";
+
+        // @wc
+        try {
+            this.geometricObjects[0].element.setAttribute('data-is-block', this.countChildren() == 0 ? '1' : '0');
+        } catch(e) {
+            console.log(e);
+        }
     }
 
     this.setOn = function() {
@@ -1438,6 +1445,7 @@ function logicalObject(obj) {
     this.deleteBlock = function() {
         if (this.block)
             contentDocument.body.removeChild(this.block);
+        this.geometricObjects[0].element.setAttribute('data-is-block', '0');
         this.block = undefined;
     }
     this.countChildren = function() {
@@ -1574,8 +1582,7 @@ function geometricObject() {
 function processImportance(block) {
     if (block.terminal()) {
         block.importance = grid.getImportance(block);
-        if (verbose)
-            block.updateBlock();
+        block.updateBlock();
     } else {
         for (var i = 0; i < block.children.length; i++) {
             if (block.children[i]) {
