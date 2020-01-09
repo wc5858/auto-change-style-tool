@@ -52,6 +52,9 @@ const replaceNodeContents = (node, source) => {
       }
       if (cur.info.tag === 'IMG') {
         const img = source.imgs.shift();
+        if (!img) {
+          continue;
+        }
         cur.info.src = img.src || '';
         cur.info.css.width = img.width || '';
         cur.info.css.height = img.height || '';

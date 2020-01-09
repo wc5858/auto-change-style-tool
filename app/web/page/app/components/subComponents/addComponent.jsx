@@ -138,11 +138,11 @@ class AddComponent extends Component {
             rules: [
               {
                 required: true,
-                validator: (rule, value) => value >=1 && value <=10,
-                message: '请输入1到10的数字!'
+                validator: (rule, value) => value >=0 && value <=10,
+                message: '请输入0到10的数字!'
               }
             ]
-          })(<Input placeholder="1到10之间，越大代表粒度越粗" />)}
+          })(<Input placeholder="0到10之间，越大代表粒度越粗" />)}
         </Form.Item>
         {formItems}
         <Form.Item {...formItemLayoutWithOutLabel}>
