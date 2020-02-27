@@ -1,15 +1,45 @@
 {
   "app.css": "/public/css/app.css",
   "app.js": "/public/js/chunk/app.js",
+  "common.css": "/public/css/common.css",
+  "common.js": "/public/js/chunk/common.js",
+  "login.css": "/public/css/login.css",
+  "login.js": "/public/js/chunk/login.js",
+  "register.css": "/public/css/register.css",
+  "register.js": "/public/js/chunk/register.js",
   "runtime.js": "/public/js/runtime.js",
   "deps": {
     "app.js": {
       "js": [
         "/public/js/runtime.js",
+        "/public/js/chunk/common.js",
         "/public/js/chunk/app.js"
       ],
       "css": [
+        "/public/css/common.css",
         "/public/css/app.css"
+      ]
+    },
+    "login.js": {
+      "js": [
+        "/public/js/runtime.js",
+        "/public/js/chunk/common.js",
+        "/public/js/chunk/login.js"
+      ],
+      "css": [
+        "/public/css/common.css",
+        "/public/css/login.css"
+      ]
+    },
+    "register.js": {
+      "js": [
+        "/public/js/runtime.js",
+        "/public/js/chunk/common.js",
+        "/public/js/chunk/register.js"
+      ],
+      "css": [
+        "/public/css/common.css",
+        "/public/css/register.css"
       ]
     }
   },

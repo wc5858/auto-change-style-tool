@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import HeaderComponet from './header';
+
+import './userLayout.less';
+
 export default class Layout extends Component {
   render() {
-    if(EASY_ENV_IS_NODE) {
+    if (EASY_ENV_IS_NODE) {
       return <html>
         <head>
           <title>{this.props.title}</title>
@@ -12,7 +14,14 @@ export default class Layout extends Component {
           <meta name="description" content={this.props.description}></meta>
           <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"></link>
         </head>
-        <body><HeaderComponet /><div id="app">{this.props.children}</div></body>
+        <body id="page-user">
+          <div className="container">
+            <div className="header">
+              <span className="title">前端风格自动替换工具</span>
+            </div>
+            <div id="app">{this.props.children}</div>
+          </div>
+        </body>
       </html>;
     }
     return <div id="app">{this.props.children}</div>;

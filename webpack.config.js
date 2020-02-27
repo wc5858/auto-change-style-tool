@@ -4,7 +4,9 @@ const resolve = (filepath) => path.resolve(__dirname, filepath);
 module.exports = {
   devtool: 'eval',
   entry: {
-    app: 'app/web/page/app/index.js'
+    app: 'app/web/page/app/index.js',
+    login: 'app/web/page/login/index.js',
+    register: 'app/web/page/register/index.js'
   },
   lib: ['react', 'react-dom'],
   loaders: {
