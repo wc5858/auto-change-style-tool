@@ -30,9 +30,7 @@ module.exports = app => {
         return;
       }
       await ctx.render('login.js', {
-        url: ctx.url,
-        login: {},
-        submitting: false
+        url: ctx.url
       });
     }
 

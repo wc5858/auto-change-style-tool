@@ -168,9 +168,9 @@
 }
 
 .redux-nav-item{
-    margin-top: 40px;
-    padding: 0 40px;
-    padding-bottom: 40px;
+    /* margin-top: 40px; */
+    /* padding: 0 40px;
+    padding-bottom: 40px; */
 }
 
 .redux-nav-item h3{
@@ -208,7 +208,8 @@
 }
 
 [data-replaced="1"]:hover::after {
-    content: '被替换组件，点击查看代码';
+    /* content: '被替换组件，点击查看代码'; */
+    content: 'replaced component, click to check code';
     -webkit-text-fill-color: initial;
     position: absolute;
     left: 0;
@@ -217,4 +218,13 @@
     bottom: 0;
     color: #cd2a19 !important;
     border: dashed 2px;
+}
+
+.logo {
+    height: 64px;
+}
+
+/* 该hack是为了解决antd范例给到的sidebar-layout的一个样式缺陷 */
+#app > div > .ant-layout {
+    flex-direction: row;
 }

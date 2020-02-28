@@ -10,6 +10,7 @@ import App from './components';
 import { create } from './components/store';
 import routes from './components/router'
 import './index.css';
+import './i18n';
 
 import createSagaMiddleware from 'redux-saga'
 import rootSaga from './components/store/sagas';

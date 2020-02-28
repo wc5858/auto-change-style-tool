@@ -4,10 +4,11 @@ import { createTask, findTask } from '../store/actions';
 import { Row, Modal, Button, Table, Steps } from 'antd';
 import CreateTask from '../subComponents/createTask';
 import HtmlModal from '../subComponents/htmlModal';
+import { withTranslation } from 'react-i18next';
 
 const { Step } = Steps;
 
-class Home extends Component {
+class Style extends Component {
   state = {
     loading: false,
     visible: false,
@@ -69,7 +70,7 @@ class Home extends Component {
 
   render() {
     const { visible, loading, htmlModalVisible, html, style } = this.state;
-    const { data, findTask } = this.props;
+    const { data, findTask, t } = this.props;
     const columns = [
       {
         title: 'Site',
@@ -84,7 +85,8 @@ class Home extends Component {
       {
         title: 'State',
         dataIndex: 'state',
-        key: 'state'
+        key: 'state',
+        render: state => t(state)
       },
       {
         title: 'ColorDataName',
@@ -105,7 +107,7 @@ class Home extends Component {
           <span>
             {!!record.result && (
               <a onClick={() => this.showHtmlModal(record.result)}>
-                点击查看网页
+                {t('点击查看网页')}
               </a>
             )}
           </span>
@@ -125,7 +127,7 @@ class Home extends Component {
       <div className="redux-nav-item">
         <div>
           <Button type="primary" onClick={this.showModal}>
-            新建风格更换任务
+            {t('新建风格更换任务')}
           </Button>
           <Button
             type="primary"
@@ -133,7 +135,7 @@ class Home extends Component {
             style={{ marginLeft: '10px' }}
             onClick={findTask}
           >
-            刷新数据
+            {t('刷新数据')}
           </Button>
         </div>
         <Row style={{ marginTop: '20px' }}>
@@ -158,7 +160,7 @@ class Home extends Component {
                       <Step
                         title={item.name}
                         subTitle={
-                          item.wait ? '执行中...' : item.time / 1000 + 's'
+                          item.wait ? `${t('执行中')}...` : item.time / 1000 + 's'
                         }
                         status={
                           item.wait ? 'wait' : item.success ? 'finish' : 'error'
@@ -183,7 +185,7 @@ class Home extends Component {
         <Modal
           width={800}
           visible={visible}
-          title="创建任务"
+          title={t('新建风格更换任务')}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
           footer={[
@@ -218,4 +220,4 @@ const mapStateToProps = state => ({
   data: state.taskData || []
 });
 
-export default connect(mapStateToProps, { createTask, findTask })(Home);
+export default connect(mapStateToProps, { createTask, findTask })(withTranslation('translation', { withRef: true })(Style));

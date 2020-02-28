@@ -4,6 +4,7 @@ module.exports = app => {
   const { index, login, handleLogin, register, handleRegister } = app.controller.home;
 
   app.get('/', index);
+  app.get('/style', index);
   app.get('/color', index);
   app.get('/component', index);
   app.get('/catcher', index);

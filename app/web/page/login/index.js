@@ -1,9 +1,5 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import { match, RouterContext } from 'react-router';
-import { BrowserRouter, StaticRouter } from 'react-router-dom';
-import { matchRoutes, renderRoutes } from 'react-router-config';
 import { AppContainer } from 'react-hot-loader';
 import LoginPage from './login';
 
@@ -12,7 +8,7 @@ const clientRender = () => {
   // 登录页面比较简单， 就不使用store增加复杂度了
   const state = window.__INITIAL_STATE__;
   const Entry = () => (<div>
-    <LoginPage login={state.login} />
+    <LoginPage url={state.url} />
   </div>
   );
   const render = Page => {
@@ -27,8 +23,8 @@ const clientRender = () => {
 // 这里的async不能去掉，这可能是使用的ssr框架没有做好兼容性导致的
 // 或者换成Promise.resolve()
 const serverRender = async context => {
-  const { login } = context.state;
-  return () => <LoginPage login={login} />;
+  const { url } = context.state;
+  return () => <LoginPage url={url} />;
 };
 
 export default EASY_ENV_IS_NODE ? serverRender : clientRender();

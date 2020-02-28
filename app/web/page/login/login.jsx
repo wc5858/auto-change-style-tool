@@ -37,7 +37,6 @@ class LoginPage extends Component {
     const { url } = this.props;
     const { form } = this.props;
     const { getFieldDecorator } = form;
-    const { login, submitting } = this.props;
     return <UserLayout hideHeader><div className="login-main">
       <Form onSubmit={this.handleSubmit} className="login-form">
         <Form.Item>

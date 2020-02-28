@@ -1,5 +1,8 @@
-import Home from './home';
+import Style from './style';
 import Color from './color';
+import Catcher from './catcher';
+import Component from './component';
+import Dashboard from './dashboard';
 const NotFound = () => {
   return (
     <Route render={({ staticContext }) => {
@@ -21,8 +24,20 @@ const routes = [
     component: Color
   },
   {
+    path: '/style',
+    component: Style
+  },
+  {
+    path: '/catcher',
+    component: Catcher
+  },
+  {
+    path: '/component',
+    component: Component
+  },
+  {
     path: '/',
-    component: Home
+    component: Dashboard
   },
   {
     path: '*',

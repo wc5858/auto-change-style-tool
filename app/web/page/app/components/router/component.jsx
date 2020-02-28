@@ -7,6 +7,7 @@ import {
   deleteComponent
 } from '../store/actions';
 import AddComponent from '../subComponents/addComponent';
+import { withTranslation } from 'react-i18next';
 
 class Component extends React.Component {
   state = {
@@ -50,7 +51,7 @@ class Component extends React.Component {
 
   render() {
     const { visible, loading } = this.state;
-    const { data, findComponent, deleteComponent } = this.props;
+    const { data, findComponent, deleteComponent, t } = this.props;
     const columns = [
       {
         title: 'Site',
@@ -65,13 +66,14 @@ class Component extends React.Component {
       {
         title: 'State',
         dataIndex: 'state',
-        key: 'state'
+        key: 'state',
+        render: state => t(state)
       },
       {
         title: 'Time',
         dataIndex: 'time',
         key: 'time',
-        render: time => time && Math.round(time / 1000) + '秒'
+        render: time => time && Math.round(time / 1000) + t('秒')
       },
       {
         title: 'Pac',
@@ -108,7 +110,7 @@ class Component extends React.Component {
       <div className="redux-nav-item">
         <div>
           <Button type="primary" onClick={this.showModal}>
-            创建组件数据
+            {t('新建组件数据')}
           </Button>
           <Button
             type="primary"
@@ -116,7 +118,7 @@ class Component extends React.Component {
             style={{ marginLeft: '10px' }}
             onClick={findComponent}
           >
-            刷新数据
+            {t('刷新数据')}
           </Button>
         </div>
         <Row style={{ marginTop: '20px' }}>
@@ -137,7 +139,7 @@ class Component extends React.Component {
         <Modal
           width={800}
           visible={visible}
-          title="创建组件数据"
+          title={t('新建组件数据')}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
           footer={[
@@ -172,4 +174,4 @@ export default connect(mapStateToProps, {
   createComponent,
   findComponent,
   deleteComponent
-})(Component);
+})(withTranslation('translation', { withRef: true })(Component));

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { createColor, findColor, deleteColor } from '../store/actions';
 import AddColor from '../subComponents/addColor';
 import ShowColors from '../subComponents/showColors';
+import { withTranslation } from 'react-i18next';
 
 const { Panel } = Collapse;
 
@@ -48,7 +49,7 @@ class Color extends Component {
 
   render() {
     const { visible, loading } = this.state;
-    const { data, findColor, deleteColor } = this.props;
+    const { data, findColor, deleteColor, t } = this.props;
     const columns = [
       {
         title: 'Site',
@@ -63,13 +64,14 @@ class Color extends Component {
       {
         title: 'State',
         dataIndex: 'state',
-        key: 'state'
+        key: 'state',
+        render: state => t(state)
       },
       {
         title: 'Time',
         dataIndex: 'time',
         key: 'time',
-        render: time => time && Math.round(time / 1000) + '秒'
+        render: time => time && Math.round(time / 1000) + t('秒')
       },
       {
         title: 'Action',
@@ -104,7 +106,7 @@ class Color extends Component {
       <div className="redux-nav-item">
         <div>
           <Button type="primary" onClick={this.showModal}>
-            新建色彩数据
+            {t('新建色彩数据')}
           </Button>
           <Button
             type="primary"
@@ -112,7 +114,7 @@ class Color extends Component {
             style={{ marginLeft: '10px' }}
             onClick={findColor}
           >
-            刷新数据
+            {t('刷新数据')}
           </Button>
         </div>
         <Row style={{ marginTop: '20px' }}>
@@ -123,18 +125,18 @@ class Color extends Component {
                 <Panel header="SubPages" key="SubPages">
                   <p>{record.subPages.join(',')}</p>
                 </Panel>
-                {extraInfo(record.bgColor, 'BgColorData（原始数据）')}
-                {showColor(record.bgColor, 'areaRatio', '背景色按面积分布情况')}
+                {extraInfo(record.bgColor, `BgColorData(${t('原始数据')})`)}
+                {showColor(record.bgColor, 'areaRatio', t('背景色按面积分布情况'))}
                 {showColor(
                   record.bgColor,
                   'timesRatio',
-                  '背景色按出现频率分布情况'
+                  t('背景色按出现频率分布情况')
                 )}
-                {extraInfo(record.fontColor, 'FontColorData（原始数据）')}
+                {extraInfo(record.fontColor, `FontColorData(${t('原始数据')})`)}
                 {showColor(
                   record.fontColor,
                   'lengthRatio',
-                  '字体颜色按字符数分布情况'
+                  t('字体颜色按字符数分布情况')
                 )}
                 {extraInfo(record.err, 'Error')}
               </Collapse>
@@ -145,7 +147,7 @@ class Color extends Component {
         <Modal
           width={800}
           visible={visible}
-          title="创建颜色数据"
+          title={t('新建色彩数据')}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
           footer={[
@@ -177,4 +179,4 @@ export default connect(mapStateToProps, {
   createColor,
   findColor,
   deleteColor
-})(Color);
+})(withTranslation('translation', { withRef: true })(Color));

@@ -5,15 +5,16 @@ import cssbeautify from 'cssbeautify';
 import hljs from 'highlight.js/lib/highlight';
 import css from 'highlight.js/lib/languages/css';
 import 'highlight.js/styles/github.css';
+import { withTranslation } from 'react-i18next';
 
 hljs.registerLanguage('css', css);
 
 class CodeModal extends Component {
   render() {
-    const { visible, onCancel, code, cssData } = this.props;
+    const { visible, onCancel, code, cssData, t } = this.props;
     return (
       <Modal
-        title="css代码"
+        title={t('css代码')}
         visible={visible}
         onOk={onCancel}
         onCancel={onCancel}
@@ -27,4 +28,4 @@ class CodeModal extends Component {
 
 const mapStateToProps = state => ({ cssData: state.cssData || '' });
 
-export default connect(mapStateToProps, { })(CodeModal);
+export default connect(mapStateToProps, { })(withTranslation('translation', { withRef: true })(CodeModal));

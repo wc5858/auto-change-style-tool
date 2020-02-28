@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Input, Icon, Button } from 'antd';
+import { withTranslation } from 'react-i18next';
 
 let id = 1;
 
@@ -43,7 +44,8 @@ class AddColor extends Component {
   };
 
   render() {
-    const { getFieldDecorator, getFieldValue } = this.props.form;
+    const { form, t } = this.props;
+    const { getFieldDecorator, getFieldValue } = form;
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -65,7 +67,7 @@ class AddColor extends Component {
     const formItems = keys.map((k, index) => (
       <Form.Item
         {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
-        label={index === 0 ? '子页面url' : ''}
+        label={index === 0 ? t('子页面url') : ''}
         required={true}
         key={k}
       >
@@ -75,12 +77,12 @@ class AddColor extends Component {
             {
               required: true,
               whitespace: true,
-              message: '请输入子页面url或删除此项'
+              message: t('请输入子页面url或删除此项')
             }
           ]
         })(
           <Input
-            placeholder="子页面url"
+            placeholder={t('子页面url')}
             style={{ width: '60%', marginRight: 8 }}
           />
         )}
@@ -95,30 +97,30 @@ class AddColor extends Component {
     ));
     return (
       <Form {...formItemLayout}>
-        <Form.Item label="站点名称">
+        <Form.Item label={t('站点名称')}>
           {getFieldDecorator('site', {
             rules: [
               {
                 type: 'string',
-                message: '请输入正确的站点名称!'
+                message: t('请输入正确的站点名称!')
               },
               {
                 required: true,
-                message: '请输入站点名称!'
+                message: t('请输入站点名称!')
               }
             ]
           })(<Input />)}
         </Form.Item>
-        <Form.Item label="基础url">
+        <Form.Item label={t('基础url')}>
           {getFieldDecorator('baseUrl', {
             rules: [
               {
                 type: 'url',
-                message: '请输入正确的url!'
+                message: t('请输入正确的url!')
               },
               {
                 required: true,
-                message: '请输入url!'
+                message: t('请输入url!')
               }
             ]
           })(<Input />)}
@@ -126,12 +128,12 @@ class AddColor extends Component {
         {formItems}
         <Form.Item {...formItemLayoutWithOutLabel}>
           <Button type="dashed" onClick={this.add} style={{ width: '60%' }}>
-            <Icon type="plus" /> 添加子页面
+            <Icon type="plus" /> {t('添加子页面')}
           </Button>
         </Form.Item>
-        <Form.Item label="批量添加">
+        <Form.Item label={t('批量添加')}>
           {getFieldDecorator('subUrls')(
-            <Input.TextArea placeholder="输入多个子页面，以逗号分隔，并点击下方按钮完成批量添加" />
+            <Input.TextArea placeholder={t('输入多个子页面，以逗号分隔，并点击下方按钮完成批量添加')} />
           )}
         </Form.Item>
         <Form.Item {...formItemLayoutWithOutLabel}>
@@ -140,7 +142,7 @@ class AddColor extends Component {
             style={{ width: '60%' }}
             type="primary"
           >
-            <Icon type="plus" /> 批量添加子页面
+            <Icon type="plus" /> {t('批量添加子页面')}
           </Button>
         </Form.Item>
       </Form>
@@ -149,6 +151,6 @@ class AddColor extends Component {
 }
 
 const WrappedAddColor = Form.create({ name: 'add_color' })(
-  AddColor
+  withTranslation('translation', { withRef: true })(AddColor)
 );
 export default WrappedAddColor;

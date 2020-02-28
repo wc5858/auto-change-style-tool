@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Form, Input, Select, Divider, Icon, Tooltip } from 'antd';
+import { withTranslation } from 'react-i18next';
 
 class CreateTask extends Component {
   render() {
-    const { form, colorData, componentData } = this.props;
+    const { form, colorData, componentData, t } = this.props;
     const { getFieldDecorator } = form;
     const formItemLayout = {
       labelCol: {
@@ -18,36 +19,36 @@ class CreateTask extends Component {
     };
     return (
       <Form {...formItemLayout}>
-        <Form.Item label="站点名称">
+        <Form.Item label={t('站点名称')}>
           {getFieldDecorator('site', {
             rules: [
               {
                 type: 'string',
-                message: '请输入正确的站点名称!'
+                message: t('请输入正确的站点名称!')
               },
               {
                 required: true,
-                message: '请输入站点名称!'
+                message: t('请输入站点名称!')
               }
             ]
           })(<Input />)}
         </Form.Item>
-        <Form.Item label="站点url">
+        <Form.Item label={t('站点url')}>
           {getFieldDecorator('url', {
             rules: [
               {
                 type: 'url',
-                message: '请输入正确的url!'
+                message: t('请输入正确的url!')
               },
               {
                 required: true,
-                message: '请输入url!'
+                message: t('请输入url!')
               }
             ]
           })(<Input />)}
         </Form.Item>
-        <Divider>更换组件</Divider>
-        <Form.Item label="组件数据源">
+        <Divider>{t('更换组件')}</Divider>
+        <Form.Item label={t('组件数据源')}>
           {getFieldDecorator('componentDataId', {
             initialValue: [componentData[0]._id]
           })(
@@ -62,23 +63,23 @@ class CreateTask extends Component {
             </Select>
           )}
         </Form.Item>
-        <Form.Item label="分片粒度">
+        <Form.Item label={t('分片粒度')}>
           {getFieldDecorator('pac', {
             initialValue: 5,
             rules: [
               {
                 required: true,
                 validator: (rule, value) => value >= 0 && value <= 10,
-                message: '请输入0到10的数字!'
+                message: t('请输入0到10的数字!')
               }
             ]
-          })(<Input placeholder="0到10之间，越大代表粒度越粗" />)}
+          })(<Input placeholder={t('0到10之间，越大代表粒度越粗')} />)}
         </Form.Item>
         <Form.Item
           label={
             <span>
-              停止阈值&nbsp;
-              <Tooltip title="相似度达到此值时不继续匹配，设置为1则总是不停止">
+              {t('停止阈值')}&nbsp;
+              <Tooltip title={t('相似度达到此值时不继续匹配，设置为1则总是不停止')}>
                 <Icon type="question-circle-o" />
               </Tooltip>
             </span>
@@ -91,8 +92,8 @@ class CreateTask extends Component {
         <Form.Item
           label={
             <span>
-              下限阈值&nbsp;
-              <Tooltip title="相似度未达到此值时不发生匹配，设置为0则总是发生替换">
+              {t('下限阈值')}&nbsp;
+              <Tooltip title={t('相似度未达到此值时不发生匹配，设置为0则总是发生替换')}>
                 <Icon type="question-circle-o" />
               </Tooltip>
             </span>
@@ -102,8 +103,8 @@ class CreateTask extends Component {
             initialValue: 0.3
           })(<Input />)}
         </Form.Item>
-        <Divider>更换颜色</Divider>
-        <Form.Item label="颜色数据源">
+        <Divider>{t('更换颜色')}</Divider>
+        <Form.Item label={t('颜色数据源')}>
           {getFieldDecorator('colorDataId', {
             initialValue: colorData[0]._id
           })(
@@ -118,7 +119,7 @@ class CreateTask extends Component {
             </Select>
           )}
         </Form.Item>
-        <Form.Item label="背景色替换规则">
+        <Form.Item label={t('背景色替换规则')}>
           {getFieldDecorator('bgMappingType', {
             initialValue: 'area'
           })(
@@ -136,10 +137,11 @@ class CreateTask extends Component {
   }
 }
 
+// 三层HOC...
 const WrappedCreateTask = Form.create({ name: 'create_task' })(
   connect(state => ({
     colorData: state.colorData,
     componentData: state.componentData
-  }))(CreateTask)
+  }))(withTranslation('translation', { withRef: true })(CreateTask))
 );
 export default WrappedCreateTask;
