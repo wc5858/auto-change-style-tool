@@ -17,7 +17,7 @@ const resources = {
       '色彩数据': 'Color Data',
       '组件数据': 'Component Data',
       '事件捕捉': 'Event Catcher',
-      '团队': 'Team',
+      '团队': 'Teams',
       // common
       '秒': 's',
       '执行成功': 'success',
@@ -67,7 +67,14 @@ const resources = {
       // style
       '点击查看网页': 'click to preview page',
       '新建风格更换任务': 'create new style change task',
-      '执行中': 'executing'
+      '执行中': 'executing',
+      // teams
+      '新建团队': 'create a new team',
+      '团队名称': 'team name',
+      '请输入团队名称!': 'please input team name',
+      '团队描述': 'team description',
+      '请输入团队描述!': 'please input team description',
+      '成员可邀请其他人加入': 'members can invite others to join'
     }
   }
 };

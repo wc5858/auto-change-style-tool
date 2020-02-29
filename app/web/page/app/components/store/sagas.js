@@ -12,7 +12,8 @@ import {
   DELETE_COMPONENT,
   COMPONENT_DATA,
   GET_NANO_CSS,
-  CSS_DATA
+  CSS_DATA,
+  CREATE_TEAM
 } from './constant';
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -147,11 +148,23 @@ const getNanoCssAsync = function*(action) {
       rawCss: action.rawCss
     }
   });
-  console.log(response)
   yield put({
     type: CSS_DATA,
     data: response.data.data
   });
+};
+
+const createTeamAsync = function*(action) {
+  const response = yield call(axios, {
+    method: 'post',
+    url: '/api/v1/team/create',
+    data: action.data
+  });
+  if (response.data && response.data.success) {
+    message.success('操作成功！');
+  } else {
+    message.error('操作失败');
+  }
 };
 
 const watcher = function*() {
@@ -166,6 +179,8 @@ const watcher = function*() {
   yield takeEvery(CREATE_COMPONENT, createComponentAsync);
   yield takeEvery(FIND_COMPONENT, findComponentAsync);
   yield takeEvery(DELETE_COMPONENT, deleteComponentAsync);
+
+  yield takeEvery(CREATE_TEAM, createTeamAsync);
 };
 
 // notice how we now only export the rootSaga

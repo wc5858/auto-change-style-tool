@@ -5,6 +5,7 @@ import Style from './router/style';
 import Color from './router/color';
 import Cp from './router/component';
 import Catcher from './router/catcher';
+import Teams from './router/teams';
 import SelectLang from '../../../component/selectLang';
 import { withTranslation } from 'react-i18next';
 import { Menu, Icon, Layout } from 'antd';
@@ -72,9 +73,11 @@ class App extends React.Component {
                 <Link to="/catcher">{t('事件捕捉')}</Link>
               </Menu.Item>
             </SubMenu>
-            <Menu.Item key="team">
-              <Icon type="team" />
-              <span>{t('团队')}</span>
+            <Menu.Item key="teams">
+              <Link to="/teams">
+                <Icon type="team" />
+                <span>{t('团队')}</span>
+              </Link>
             </Menu.Item>
           </Menu>
         </Sider>
@@ -96,7 +99,7 @@ class App extends React.Component {
             <div style={{
               float: 'right'
             }}>
-              <SelectLang/>
+              <SelectLang />
             </div>
           </Header>
           <Content
@@ -112,6 +115,7 @@ class App extends React.Component {
               <Route path="/component" component={Cp} />
               <Route path="/color" component={Color} />
               <Route path="/style" component={Style} />
+              <Route path="/teams" component={Teams} />
               <Route path="/" component={Dashboard} />
             </Switch>
           </Content>

@@ -8,6 +8,7 @@ module.exports = app => {
   app.get('/color', index);
   app.get('/component', index);
   app.get('/catcher', index);
+  app.get('/teams', index);
 
   // 渲染登录页面，用户输入账号密码
   app.get('/login', login);
@@ -34,16 +35,8 @@ module.exports = app => {
   app.post('/api/v1/component/create', createComponent);
   app.post('/api/v1/component/find', findComponent);
   app.post('/api/v1/component/delete', deleteComponent);
+  
+  const { createTeam } = app.controller.teamApi;
 
-  app.post('/api/auth/login', function (req, res, next) {
-    passport.authenticate('local-login', function (error, user, info) {
-      if (error) {
-        return res.status(500).json(error);
-      }
-      if (!user) {
-        return res.status(401).json(info.message);
-      }
-      res.json(user);
-    })(req, res, next);
-  });
+  app.post('/api/v1/team/create', createTeam);
 };

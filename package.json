@@ -15,6 +15,9 @@
   },
   "dependencies": {
     "@antv/data-set": "^0.10.2",
+    "@dicebear/avatars": "^4.0.2",
+    "@dicebear/avatars-bottts-sprites": "^4.0.2",
+    "@dicebear/avatars-gridy-sprites": "^4.0.2",
     "ant-design-pro": "^2.3.2",
     "antd": "^3.25.0",
     "axios": "^0.19.0",
