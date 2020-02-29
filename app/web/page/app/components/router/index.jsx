@@ -3,6 +3,7 @@ import Color from './color';
 import Catcher from './catcher';
 import Component from './component';
 import Dashboard from './dashboard';
+import Teams from './teams';
 const NotFound = () => {
   return (
     <Route render={({ staticContext }) => {
@@ -34,6 +35,10 @@ const routes = [
   {
     path: '/component',
     component: Component
+  },
+  {
+    path: '/teams',
+    component: Teams
   },
   {
     path: '/',
