@@ -36,7 +36,9 @@ module.exports = app => {
   app.post('/api/v1/component/find', findComponent);
   app.post('/api/v1/component/delete', deleteComponent);
   
-  const { createTeam } = app.controller.teamApi;
+  const { createTeam, findTeam, invite } = app.controller.teamApi;
 
   app.post('/api/v1/team/create', createTeam);
+  app.post('/api/v1/team/find', findTeam);
+  app.post('/api/v1/team/invite', invite);
 };

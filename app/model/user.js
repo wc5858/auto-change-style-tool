@@ -1,3 +1,5 @@
+const Mongoose = require('mongoose');
+
 module.exports = app => {
   const mongoose = app.mongoose;
   const Schema = mongoose.Schema;
@@ -12,7 +14,7 @@ module.exports = app => {
       type: String
     },
     team: {
-      type: []
+      type: [{ type: Mongoose.Schema.ObjectId, ref: 'Team' }]
     }
   });
 

@@ -1,20 +1,56 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { List, Card, Icon, Dropdown, Menu, Avatar, Tooltip, Button, Modal } from 'antd';
+import { List, Card, Icon, Dropdown, Menu, Tooltip, Button, Modal } from 'antd';
 import { withTranslation } from 'react-i18next';
 import CreateTeam from '../subComponents/createTeam';
-import { createTeam } from '../store/actions';
+import { createTeam, findTeam, invite } from '../store/actions';
+import Avatar from '../subComponents/avatar';
 import './teams.less';
+import InviteModal from '../subComponents/inviteModal';
 
 class Teams extends PureComponent {
   state = {
     visible: false,
-    loading: false
+    loading: false,
+    inviteVisible: false,
+    inviteLoading: false,
+    selectedId: ''
   };
 
   showModal = () => {
     this.setState({
       visible: true
+    });
+  };
+
+  openInvite = id => {
+    this.setState({
+      inviteVisible: true,
+      selectedId: id
+    });
+  };
+
+  
+  handleInviteOk = () => {
+    const { userInfo, invite } = this.props;
+    this.setState({ inviteLoading: true });
+    this.refs.inviteModal.validateFields((err, values) => {
+      if (!err) {
+        // createTeam(values);
+        console.log(values, this.state.selectedId, userInfo.username)
+        invite({
+          target: values.username,
+          inviter: userInfo.username,
+          teamId: this.state.selectedId
+        });
+        this.setState({
+          inviteLoading: false,
+          inviteVisible: false
+        });
+        this.refs.inviteModal.resetFields();
+      } else {
+        this.setState({ inviteLoading: false });
+      }
     });
   };
 
@@ -39,43 +75,18 @@ class Teams extends PureComponent {
     this.setState({ visible: false });
   };
 
+  handleInviteCancel = () => {
+    this.setState({ inviteVisible: false });
+  };
+
   render() {
-    // const {
-    //   list: { list },
-    // } = this.props;
-    const { t } = this.props;
-    const { visible, loading } = this.state;
-    const list = [];
-    const itemMenu = (
-      <Menu>
-        <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" href="https://www.alipay.com/">
-            1st menu item
-          </a>
-        </Menu.Item>
-        <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" href="https://www.taobao.com/">
-            2nd menu item
-          </a>
-        </Menu.Item>
-        <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" href="https://www.tmall.com/">
-            3d menu item
-          </a>
-        </Menu.Item>
-      </Menu>
-    );
-    const CardInfo = ({ activeUser, newUser }) => (
-      <div className="card-info">
-        <div>
-          <p>活跃用户</p>
-          <p>{activeUser}</p>
-        </div>
-        <div>
-          <p>新增用户</p>
-          <p>{newUser}</p>
-        </div>
-      </div>
+    const { data, t } = this.props;
+    const { visible, loading, inviteLoading, inviteVisible } = this.state;
+    const namedAvatar = (name, avatarValue) => (
+      <Tooltip title={name}>
+        {/* Tooltip和value之间一定得加一层dom，这里是span，这应该是antd Tooltip的机制问题 */}
+        <span><Avatar value={avatarValue} size="small"/></span>
+      </Tooltip>
     );
     return (
       <div className="redux-nav-item">
@@ -84,42 +95,57 @@ class Teams extends PureComponent {
         </Button>
         <List
           rowKey="id"
-          className="filter-cardList"
+          className="filter-card-list"
           grid={{ gutter: 24, xxl: 3, xl: 2, lg: 2, md: 2, sm: 2, xs: 1 }}
-          dataSource={list}
+          dataSource={data}
           renderItem={item => (
-            <List.Item key={item.id}>
+            <List.Item key={item._id}>
               <Card
                 hoverable
                 bodyStyle={{ paddingBottom: 20 }}
                 actions={[
-                  <Tooltip title="下载">
-                    <Icon type="download" />
-                  </Tooltip>,
-                  <Tooltip title="编辑">
-                    <Icon type="edit" />
-                  </Tooltip>,
-                  <Tooltip title="分享">
+                  <Tooltip title="invite" onClick={() => this.openInvite(item._id)}>
                     <Icon type="share-alt" />
-                  </Tooltip>,
-                  <Dropdown overlay={itemMenu}>
-                    <Icon type="ellipsis" />
-                  </Dropdown>
+                  </Tooltip>
                 ]}
               >
-                <Card.Meta avatar={<Avatar size="small" src={item.avatar} />} title={item.title} />
+                <Card.Meta avatar={<Avatar value={item.avatar} />} title={item.teamName} description={item.dsc} />
                 <div className="card-item-content">
                   <div className="card-info">
-                    <div>
-                      <p>活跃用户</p>
-                      <p>1</p>
-                    </div>
+                    {
+                      namedAvatar(`admin: ${item.admin}`, item.admin)
+                    }
+                    {
+                      namedAvatar(`admin: ${item.admin}`, item.admin)
+                    }
                   </div>
                 </div>
               </Card>
             </List.Item>
           )}
         />
+        <Modal
+          width={800}
+          visible={inviteVisible}
+          title={t('邀请用户')}
+          onOk={this.handleInviteOk}
+          onCancel={this.handleInviteCancel}
+          footer={[
+            <Button key="back" onClick={this.handleInviteCancel}>
+              Return
+            </Button>,
+            <Button
+              key="submit"
+              type="primary"
+              loading={inviteLoading}
+              onClick={this.handleInviteOk}
+            >
+              Submit
+            </Button>
+          ]}
+        >
+          <InviteModal ref="inviteModal" />
+        </Modal>
         <Modal
           width={800}
           visible={visible}
@@ -147,6 +173,9 @@ class Teams extends PureComponent {
   }
 }
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+  data: state.teamData || [],
+  userInfo: state.userInfo || {}
+});
 
-export default connect(mapStateToProps, { createTeam })(withTranslation('translation', { withRef: true })(Teams));
+export default connect(mapStateToProps, { createTeam, findTeam, invite })(withTranslation('translation', { withRef: true })(Teams));

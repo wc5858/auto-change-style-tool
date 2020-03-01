@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Route, Link, Switch } from 'react-router-dom';
+import { connect } from 'react-redux';
 import Dashboard from './router/dashboard';
 import Style from './router/style';
 import Color from './router/color';
@@ -9,6 +10,7 @@ import Teams from './router/teams';
 import SelectLang from '../../../component/selectLang';
 import { withTranslation } from 'react-i18next';
 import { Menu, Icon, Layout } from 'antd';
+import Avatar from './subComponents/avatar';
 const { Header, Sider, Content } = Layout;
 
 const { SubMenu } = Menu;
@@ -24,16 +26,9 @@ class App extends React.Component {
     });
   };
 
-  handleClick = e => {
-    this.setState({
-      current: e.key
-    });
-  };
-
   render() {
-    let current;
     const name = this.props.url.replace('/', '');
-    const { t } = this.props;
+    const { userInfo, t } = this.props;
     return (
       <Layout>
         <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
@@ -97,8 +92,16 @@ class App extends React.Component {
               marginLeft: 20
             }}>{t('前端风格自动替换工具')}</span>
             <div style={{
-              float: 'right'
+              float: 'right',
+              display: 'flex',
+              alignItems: 'center'
             }}>
+              <Avatar value={userInfo.username} size="small" type="bottts" />
+              <span style={{
+                margin: '0 10px'
+              }}>
+                {userInfo.username}
+              </span>
               <SelectLang />
             </div>
           </Header>

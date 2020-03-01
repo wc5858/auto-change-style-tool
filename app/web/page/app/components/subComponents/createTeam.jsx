@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { Form, Input, Select, Divider, Icon, Tooltip, Checkbox, Avatar } from 'antd';
 import { withTranslation } from 'react-i18next';
 import ChangeableAvatar from './changeableAvatar';
-class CreateTask extends Component {
+class CreateTeam extends Component {
   render() {
-    const { form, colorData, componentData, t } = this.props;
+    const { form, t } = this.props;
     const { getFieldDecorator } = form;
     const formItemLayout = {
       labelCol: {
@@ -62,10 +61,7 @@ class CreateTask extends Component {
 }
 
 // 三层HOC...
-const WrappedCreateTask = Form.create({ name: 'create_task' })(
-  connect(state => ({
-    colorData: state.colorData,
-    componentData: state.componentData
-  }))(withTranslation('translation', { withRef: true })(CreateTask))
+const WrappedCreateTeam = Form.create({ name: 'create_team' })(
+  withTranslation('translation', { withRef: true })(CreateTeam)
 );
-export default WrappedCreateTask;
+export default WrappedCreateTeam;

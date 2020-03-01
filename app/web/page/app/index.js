@@ -19,10 +19,11 @@ import rootSaga from './components/store/sagas';
 const clientRender = () => {
   const store = create(window.__INITIAL_STATE__);
   const url = store.getState().url;
+  const userInfo = store.getState().userInfo;
   const Entry = () => (<div>
     <Provider store={ store }>
       <BrowserRouter>
-        <App url={ url }/>
+        <App url={ url }  userInfo={ userInfo }/>
       </BrowserRouter>
     </Provider>
   </div>
@@ -38,6 +39,7 @@ const clientRender = () => {
 
 const serverRender = (context, options)=> {
   const url = context.state.url;
+  const userInfo = context.state.userInfo;
   const branch = matchRoutes(routes, url);
   const promises = branch.map(({route}) => {
     const fetch = route.component.fetch;
@@ -55,7 +57,7 @@ const serverRender = (context, options)=> {
         <div>
           <Provider store={store}>
             <StaticRouter location={url} context={{}}>
-              <App url={url}/>
+              <App url={url} userInfo={userInfo}/>
             </StaticRouter>
           </Provider>
         </div>

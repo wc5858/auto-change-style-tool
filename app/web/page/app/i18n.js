@@ -74,7 +74,10 @@ const resources = {
       '请输入团队名称!': 'please input team name',
       '团队描述': 'team description',
       '请输入团队描述!': 'please input team description',
-      '成员可邀请其他人加入': 'members can invite others to join'
+      '成员可邀请其他人加入': 'members can invite others to join',
+      '用户名': 'username',
+      '请输入用户名!': 'please input username',
+      '邀请用户': 'invite'
     }
   }
 };

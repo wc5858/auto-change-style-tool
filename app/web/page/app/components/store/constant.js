@@ -15,3 +15,6 @@ export const DELETE_COMPONENT = 'DELETE_COMPONENT';
 export const GET_NANO_CSS = 'GET_NANO_CSS';
 
 export const CREATE_TEAM = 'CREATE_TEAM';
+export const FIND_TEAM = 'FIND_TEAM';
+export const TEAM_DATA = 'TEAM_DATA';
+export const INVITE = 'INVITE';

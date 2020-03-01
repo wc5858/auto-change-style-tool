@@ -8,7 +8,9 @@ import {
   FIND_COMPONENT,
   DELETE_COMPONENT,
   GET_NANO_CSS,
-  CREATE_TEAM
+  CREATE_TEAM,
+  FIND_TEAM,
+  INVITE
 } from './constant';
 
 export const createColor = data => ({
@@ -55,5 +57,14 @@ export const getNanoCss = rawCss => ({
 
 export const createTeam = data => ({
   type: CREATE_TEAM,
+  data
+});
+
+export const findTeam = () => ({
+  type: FIND_TEAM
+});
+
+export const invite = data => ({
+  type: INVITE,
   data
 });

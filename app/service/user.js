@@ -14,6 +14,9 @@ class UserSevice extends Service {
   async findOne(username) {
     return await this.ctx.model.User.findOne({ username });
   }
+  async joinTeam(username, teamId) {
+    return await this.ctx.model.User.findOneAndUpdate({ username }, { $push: { team: teamId } });
+  }
 }
 
 module.exports = UserSevice;

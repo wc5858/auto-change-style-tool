@@ -13,7 +13,10 @@ import {
   COMPONENT_DATA,
   GET_NANO_CSS,
   CSS_DATA,
-  CREATE_TEAM
+  CREATE_TEAM,
+  TEAM_DATA,
+  FIND_TEAM,
+  INVITE
 } from './constant';
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -167,6 +170,35 @@ const createTeamAsync = function*(action) {
   }
 };
 
+const findTeamAsync = function*(showMessage = false) {
+  const response = yield call(axios, {
+    method: 'post',
+    url: '/api/v1/team/find'
+  });
+  if (response.data && response.data.success) {
+    showMessage && message.success('操作成功！');
+    yield put({
+      type: TEAM_DATA,
+      data: response.data.data
+    });
+  } else {
+    message.error('获取数据失败');
+  }
+};
+
+const inviteAsync = function*(action) {
+  const response = yield call(axios, {
+    method: 'post',
+    url: '/api/v1/team/invite',
+    data: action.data
+  });
+  if (response.data && response.data.success) {
+    showMessage && message.success('操作成功！');
+  } else {
+    message.error(response.data.error);
+  }
+};
+
 const watcher = function*() {
   yield takeEvery(CREATE_COLOR, createColorAsync);
   yield takeEvery(FIND_COLOR, findColorAsync);
@@ -181,6 +213,8 @@ const watcher = function*() {
   yield takeEvery(DELETE_COMPONENT, deleteComponentAsync);
 
   yield takeEvery(CREATE_TEAM, createTeamAsync);
+  yield takeEvery(FIND_TEAM, findTeamAsync);
+  yield takeEvery(INVITE, inviteAsync);
 };
 
 // notice how we now only export the rootSaga
