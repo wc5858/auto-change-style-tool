@@ -15,6 +15,12 @@ module.exports = app => {
     },
     team: {
       type: [{ type: Mongoose.Schema.ObjectId, ref: 'Team' }]
+    },
+    invitation: {
+      type: [{
+        teamId: { type: Mongoose.Schema.ObjectId, ref: 'Team' },
+        invitor: { type: String }
+      }]
     }
   });
 

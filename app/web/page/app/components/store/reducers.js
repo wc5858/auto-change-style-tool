@@ -1,4 +1,4 @@
-import { COLOR_DATA, COMPONENT_DATA, TASK_DATA, CSS_DATA, TEAM_DATA } from './constant';
+import { COLOR_DATA, COMPONENT_DATA, TASK_DATA, CSS_DATA, TEAM_DATA, USER_INFO } from './constant';
 
 export default function update(state, action) {
   const newState = Object.assign({}, state);
@@ -16,6 +16,9 @@ export default function update(state, action) {
   }
   if (action.type === TEAM_DATA) {
     newState.teamData = action.data;
+  }
+  if (action.type === USER_INFO) {
+    newState.userInfo = action.data;
   }
   return newState;
 }

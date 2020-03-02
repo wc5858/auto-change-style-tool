@@ -18,6 +18,9 @@ class TeamSevice extends Service {
     // 要查的字段绑定的表是通过在Schema里指定ref完成的
     return (await this.ctx.model.User.findOne({ username }).populate('team')).team;
   }
+  async addMember(username, teamId) {
+    return await this.ctx.model.Team.findByIdAndUpdate(teamId, { $addToSet: { members: username } });
+  }
 }
 
 module.exports = TeamSevice;

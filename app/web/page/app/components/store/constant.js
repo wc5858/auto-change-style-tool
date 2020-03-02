@@ -18,3 +18,7 @@ export const CREATE_TEAM = 'CREATE_TEAM';
 export const FIND_TEAM = 'FIND_TEAM';
 export const TEAM_DATA = 'TEAM_DATA';
 export const INVITE = 'INVITE';
+
+export const DECLINE = 'DECLINE';
+export const JOIN = 'JOIN';
+export const USER_INFO = 'USER_INFO';

@@ -10,12 +10,13 @@ module.exports = app => {
         ctx.redirect('/login');
         return;
       }
-      const { color, component, task, team } = ctx.service;
-      const [colorData, componentData, taskData, teamData] = await Promise.all([
+      const { color, component, task, team, user } = ctx.service;
+      const [colorData, componentData, taskData, teamData, invitation] = await Promise.all([
         color.find(),
         component.find(),
         task.find(),
-        team.find(username)
+        team.find(username),
+        user.findInvitation(username)
       ]);
       await ctx.render('app.js', {
         url: ctx.url,
@@ -24,9 +25,30 @@ module.exports = app => {
         taskData,
         teamData,
         userInfo: {
-          username
+          username,
+          invitation
         }
       });
+    }
+
+    async getUserInfo() {
+      const { ctx } = this;
+      const { username } = ctx.session;
+      if (!username) {
+        ctx.body = {
+          success: false,
+          error: '未登录'
+        };
+        return;
+      }
+      const { user } = ctx.service;
+      ctx.body = {
+        success: true,
+        userInfo: {
+          username,
+          invitation: await user.findInvitation(username)
+        }
+      };
     }
 
     async login() {
@@ -56,7 +78,8 @@ module.exports = app => {
         }
       }
       ctx.body = {
-        success: false
+        success: false,
+        error: '用户名或密码错误'
       };
     }
 

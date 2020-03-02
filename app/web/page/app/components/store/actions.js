@@ -10,7 +10,9 @@ import {
   GET_NANO_CSS,
   CREATE_TEAM,
   FIND_TEAM,
-  INVITE
+  INVITE,
+  DECLINE,
+  JOIN
 } from './constant';
 
 export const createColor = data => ({
@@ -66,5 +68,15 @@ export const findTeam = () => ({
 
 export const invite = data => ({
   type: INVITE,
+  data
+});
+
+export const decline = data => ({
+  type: DECLINE,
+  data
+});
+
+export const join = data => ({
+  type: JOIN,
   data
 });

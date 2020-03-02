@@ -31,7 +31,7 @@ class RegisterPage extends Component {
             alert: false,
             submitting: true
           });
-          axios.post('/register', {
+          axios.post('/api/v1/user/register', {
             data: values
           }).then(res => {
             if (res.data.success) {

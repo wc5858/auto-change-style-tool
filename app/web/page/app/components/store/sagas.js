@@ -16,7 +16,10 @@ import {
   CREATE_TEAM,
   TEAM_DATA,
   FIND_TEAM,
-  INVITE
+  INVITE,
+  DECLINE,
+  USER_INFO,
+  JOIN
 } from './constant';
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -165,6 +168,7 @@ const createTeamAsync = function*(action) {
   });
   if (response.data && response.data.success) {
     message.success('操作成功！');
+    yield call(findTeamAsync, false);
   } else {
     message.error('操作失败');
   }
@@ -193,9 +197,54 @@ const inviteAsync = function*(action) {
     data: action.data
   });
   if (response.data && response.data.success) {
-    showMessage && message.success('操作成功！');
+    message.success('操作成功！');
   } else {
     message.error(response.data.error);
+  }
+};
+
+const declineInvitationAsync = function*(action) {
+  const response = yield call(axios, {
+    method: 'post',
+    url: '/api/v1/team/decline',
+    data: action.data
+  });
+  if (response.data && response.data.success) {
+    message.success('操作成功！');
+    yield call(getUserInfoAsync, false);
+  } else {
+    message.error(response.data.error);
+  }
+};
+
+const joinAsync = function*(action) {
+  const response = yield call(axios, {
+    method: 'post',
+    url: '/api/v1/team/join',
+    data: action.data
+  });
+  if (response.data && response.data.success) {
+    message.success('操作成功！');
+    yield call(getUserInfoAsync, false);
+    yield call(findTeamAsync, false);
+  } else {
+    message.error(response.data.error);
+  }
+};
+
+const getUserInfoAsync = function*(showMessage = false) {
+  const response = yield call(axios, {
+    method: 'post',
+    url: '/api/v1/user/info'
+  });
+  if (response.data && response.data.success) {
+    showMessage && message.success('操作成功！');
+    yield put({
+      type: USER_INFO,
+      data: response.data.userInfo
+    });
+  } else {
+    message.error('获取数据失败');
   }
 };
 
@@ -215,6 +264,9 @@ const watcher = function*() {
   yield takeEvery(CREATE_TEAM, createTeamAsync);
   yield takeEvery(FIND_TEAM, findTeamAsync);
   yield takeEvery(INVITE, inviteAsync);
+
+  yield takeEvery(DECLINE, declineInvitationAsync);
+  yield takeEvery(JOIN, joinAsync);
 };
 
 // notice how we now only export the rootSaga

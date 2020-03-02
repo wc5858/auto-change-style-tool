@@ -9,9 +9,10 @@ const botttsAvatars = new Avatars(BotttsSpriteCollection);
 
 class SvgAvatar extends Component {
   render() {
-    const { value, type, size } = this.props;
+    const { value = '', type, size } = this.props;
     const avatars = type === 'bottts' ? botttsAvatars : gridyAvatars;
-    const svg = avatars.create(value);
+    // 调用toString，因为数据类型会影响avatar结果
+    const svg = avatars.create(value.toString());
     return (
       <Avatar size={size || 'large'} style={{ background: `url('data:image/svg+xml;utf8,${encodeURIComponent(svg)}')` }} />
     );

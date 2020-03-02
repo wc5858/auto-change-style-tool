@@ -17,7 +17,7 @@ class LoginPage extends Component {
         this.setState({
           submitting: true
         });
-        axios.post('/login', values).then(res => {
+        axios.post('/api/v1/user/login', values).then(res => {
           if (res.data.success) {
             message.success('登录成功');
             location.href = '/';

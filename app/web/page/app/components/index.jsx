@@ -10,9 +10,9 @@ import Teams from './router/teams';
 import SelectLang from '../../../component/selectLang';
 import { withTranslation } from 'react-i18next';
 import { Menu, Icon, Layout } from 'antd';
-import Avatar from './subComponents/avatar';
-const { Header, Sider, Content } = Layout;
+import HeaderUser from './subComponents/headerUser';
 
+const { Header, Sider, Content } = Layout;
 const { SubMenu } = Menu;
 
 class App extends React.Component {
@@ -96,12 +96,7 @@ class App extends React.Component {
               display: 'flex',
               alignItems: 'center'
             }}>
-              <Avatar value={userInfo.username} size="small" type="bottts" />
-              <span style={{
-                margin: '0 10px'
-              }}>
-                {userInfo.username}
-              </span>
+              <HeaderUser />
               <SelectLang />
             </div>
           </Header>

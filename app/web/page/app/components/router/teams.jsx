@@ -30,17 +30,15 @@ class Teams extends PureComponent {
     });
   };
 
-  
+
   handleInviteOk = () => {
     const { userInfo, invite } = this.props;
     this.setState({ inviteLoading: true });
     this.refs.inviteModal.validateFields((err, values) => {
       if (!err) {
-        // createTeam(values);
-        console.log(values, this.state.selectedId, userInfo.username)
         invite({
           target: values.username,
-          inviter: userInfo.username,
+          invitor: userInfo.username,
           teamId: this.state.selectedId
         });
         this.setState({
@@ -80,12 +78,12 @@ class Teams extends PureComponent {
   };
 
   render() {
-    const { data, t } = this.props;
+    const { data, userInfo, t } = this.props;
     const { visible, loading, inviteLoading, inviteVisible } = this.state;
     const namedAvatar = (name, avatarValue) => (
       <Tooltip title={name}>
         {/* Tooltip和value之间一定得加一层dom，这里是span，这应该是antd Tooltip的机制问题 */}
-        <span><Avatar value={avatarValue} size="small"/></span>
+        <span><Avatar value={avatarValue} size="small" type="bottts" /></span>
       </Tooltip>
     );
     return (
@@ -104,9 +102,9 @@ class Teams extends PureComponent {
                 hoverable
                 bodyStyle={{ paddingBottom: 20 }}
                 actions={[
-                  <Tooltip title="invite" onClick={() => this.openInvite(item._id)}>
+                  (item.admin === userInfo.username || item.memberInvite) ? <Tooltip title="invite" onClick={() => this.openInvite(item._id)}>
                     <Icon type="share-alt" />
-                  </Tooltip>
+                  </Tooltip> : <Icon type="smile" />
                 ]}
               >
                 <Card.Meta avatar={<Avatar value={item.avatar} />} title={item.teamName} description={item.dsc} />
@@ -116,7 +114,7 @@ class Teams extends PureComponent {
                       namedAvatar(`admin: ${item.admin}`, item.admin)
                     }
                     {
-                      namedAvatar(`admin: ${item.admin}`, item.admin)
+                      item.members.map(i => namedAvatar(i, i))
                     }
                   </div>
                 </div>

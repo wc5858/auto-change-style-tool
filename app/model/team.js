@@ -12,7 +12,7 @@ module.exports = app => {
       type: Boolean
     },
     avatar: {
-      type: []
+      type: String
     },
     admin: {
       type: String

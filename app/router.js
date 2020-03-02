@@ -1,7 +1,7 @@
 
 module.exports = app => {
 
-  const { index, login, handleLogin, register, handleRegister } = app.controller.home;
+  const { index, login, handleLogin, register, handleRegister, getUserInfo } = app.controller.home;
 
   app.get('/', index);
   app.get('/style', index);
@@ -13,10 +13,12 @@ module.exports = app => {
   // 渲染登录页面，用户输入账号密码
   app.get('/login', login);
   // 登录校验
-  app.post('/login', handleLogin);
+  app.post('/api/v1/user/login', handleLogin);
   // 注册
   app.get('/register', register);
-  app.post('/register', handleRegister);
+  app.post('/api/v1/user/register', handleRegister);
+
+  app.post('/api/v1/user/info', getUserInfo);
 
   const { createColor, findColor, deleteColor } = app.controller.colorApi;
 
@@ -36,9 +38,11 @@ module.exports = app => {
   app.post('/api/v1/component/find', findComponent);
   app.post('/api/v1/component/delete', deleteComponent);
   
-  const { createTeam, findTeam, invite } = app.controller.teamApi;
+  const { createTeam, findTeam, invite, decline, join } = app.controller.teamApi;
 
   app.post('/api/v1/team/create', createTeam);
   app.post('/api/v1/team/find', findTeam);
   app.post('/api/v1/team/invite', invite);
+  app.post('/api/v1/team/decline', decline);
+  app.post('/api/v1/team/join', join);
 };
