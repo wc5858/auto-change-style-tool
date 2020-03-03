@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { Form, Input, Icon, Button } from 'antd';
+import { connect } from 'react-redux';
+import { Form, Input, Icon, Button, Checkbox, Select } from 'antd';
 import { withTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 let id = 1;
 
@@ -53,7 +55,7 @@ class AddComponent extends Component {
   };
 
   render() {
-    const { form, t } = this.props;
+    const { form, t, teamData } = this.props;
     const { getFieldDecorator, getFieldValue } = form;
     const formItemLayout = {
       labelCol: {
@@ -166,12 +168,47 @@ class AddComponent extends Component {
             <Icon type="plus" /> {t('批量添加子页面')}
           </Button>
         </Form.Item>
+        <Form.Item {...formItemLayoutWithOutLabel}>
+          {getFieldDecorator('share', {
+            valuePropName: 'checked',
+            initialValue: true
+          })(<Checkbox>{t('分享到团队')}</Checkbox>)}
+        </Form.Item>
+        {
+
+          form.getFieldValue('share') &&
+          (
+            teamData.length > 0 ?
+              <Form.Item label={t('团队')}>
+                {getFieldDecorator('teamId', {
+                  initialValue: teamData[0]._id
+                })(
+                  <Select>
+                    {teamData
+                      .map(({ _id, teamName }) => (
+                        <Select.Option value={_id} key={_id}>
+                          {teamName}
+                        </Select.Option>
+                      ))}
+                  </Select>
+                )}
+              </Form.Item> :
+              <Form.Item {...formItemLayoutWithOutLabel}>
+                <Link to="/teams">{t('没有团队，去创建')}</Link>
+              </Form.Item>
+          )
+        }
       </Form>
     );
   }
 }
 
+const mapStateToProps = state => ({
+  teamData: state.teamData || [],
+  userInfo: state.userInfo || {}
+});
+
 const WrappedAddComponent = Form.create({ name: 'add_Component' })(
-  withTranslation('translation', { withRef: true })(AddComponent)
+  connect(mapStateToProps, {})(withTranslation('translation', { withRef: true })(AddComponent))
 );
 export default WrappedAddComponent;

@@ -25,11 +25,12 @@ class Color extends Component {
     this.setState({ loading: true });
     this.refs.colorForm.validateFields((err, values) => {
       if (!err) {
-        const { baseUrl, site, names } = values;
+        const { baseUrl, site, names, teamId, share } = values;
         const data = {
           baseUrl,
           site,
-          subPages: names.filter(i => i)
+          subPages: names.filter(i => i),
+          team: share ? teamId : null
         };
         createColor(data);
         this.setState({
@@ -49,7 +50,7 @@ class Color extends Component {
 
   render() {
     const { visible, loading } = this.state;
-    const { data, findColor, deleteColor, t } = this.props;
+    const { data, findColor, deleteColor, teamData, t } = this.props;
     const columns = [
       {
         title: 'Site',
@@ -72,6 +73,18 @@ class Color extends Component {
         dataIndex: 'time',
         key: 'time',
         render: time => time && Math.round(time / 1000) + t('秒')
+      },
+      {
+        title: 'Team',
+        dataIndex: 'team',
+        key: 'team',
+        // 这里要防御列表数据先取到，teamData后取到的情况
+        render: teamId => (teamData.find(i => i._id === teamId) || {}).teamName || 'private'
+      },
+      {
+        title: 'Creator',
+        dataIndex: 'creator',
+        key: 'creator'
       },
       {
         title: 'Action',
@@ -172,7 +185,8 @@ class Color extends Component {
 }
 
 const mapStateToProps = state => ({
-  data: state.colorData || []
+  data: state.colorData || [],
+  teamData: state.teamData || []
 });
 
 export default connect(mapStateToProps, {

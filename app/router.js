@@ -1,7 +1,7 @@
 
 module.exports = app => {
 
-  const { index, login, handleLogin, register, handleRegister, getUserInfo } = app.controller.home;
+  const { index, login, handleLogin, register, handleRegister, getUserInfo, logout } = app.controller.home;
 
   app.get('/', index);
   app.get('/style', index);
@@ -19,6 +19,7 @@ module.exports = app => {
   app.post('/api/v1/user/register', handleRegister);
 
   app.post('/api/v1/user/info', getUserInfo);
+  app.post('/api/v1/user/logout', logout);
 
   const { createColor, findColor, deleteColor } = app.controller.colorApi;
 

@@ -22,3 +22,5 @@ export const INVITE = 'INVITE';
 export const DECLINE = 'DECLINE';
 export const JOIN = 'JOIN';
 export const USER_INFO = 'USER_INFO';
+
+export const LOGOUT = 'LOGOUT';

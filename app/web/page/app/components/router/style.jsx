@@ -70,7 +70,7 @@ class Style extends Component {
 
   render() {
     const { visible, loading, htmlModalVisible, html, style } = this.state;
-    const { data, findTask, t } = this.props;
+    const { data, findTask, teamData, t } = this.props;
     const columns = [
       {
         title: 'Site',
@@ -99,7 +99,18 @@ class Style extends Component {
         key: 'componentDataNames',
         render: record => (record || []).join(',')
       },
-
+      {
+        title: 'Team',
+        dataIndex: 'team',
+        key: 'team',
+        // 这里要防御列表数据先取到，teamData后取到的情况
+        render: teamId => (teamData.find(i => i._id === teamId) || {}).teamName || 'private'
+      },
+      {
+        title: 'Creator',
+        dataIndex: 'creator',
+        key: 'creator'
+      },
       {
         title: 'Action',
         key: 'action',
@@ -217,7 +228,8 @@ class Style extends Component {
 }
 
 const mapStateToProps = state => ({
-  data: state.taskData || []
+  data: state.taskData || [],
+  teamData: state.teamData || []
 });
 
 export default connect(mapStateToProps, { createTask, findTask })(withTranslation('translation', { withRef: true })(Style));

@@ -10,13 +10,17 @@ module.exports = app => {
         url,
         site,
         componentDataId,
+        share,
+        teamId,
         ...settings
       } = ctx.request.body;
       const res = await task.create({
         url,
         site,
         settings,
-        state: '执行中'
+        state: '执行中',
+        creator: ctx.session.username,
+        team: share ? teamId : null
       });
       const id = res._id;
       const runner = async () => {
@@ -97,7 +101,7 @@ module.exports = app => {
     async findTask() {
       const { ctx } = this;
       const { task } = ctx.service;
-      const data = await task.find();
+      const data = await task.findByUser();
       ctx.body = {
         success: true,
         data

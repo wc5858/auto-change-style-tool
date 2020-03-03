@@ -19,10 +19,10 @@ class LoginPage extends Component {
         });
         axios.post('/api/v1/user/login', values).then(res => {
           if (res.data.success) {
-            message.success('登录成功');
+            message.success('Login success');
             location.href = '/';
           } else {
-            message.error(`登录失败:${res.data.error}`);
+            message.error(`Login failed: ${res.data.error}`);
           }
         });
       }

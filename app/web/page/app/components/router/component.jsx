@@ -26,12 +26,13 @@ class Component extends React.Component {
     this.setState({ loading: true });
     this.refs.ComponentForm.validateFields((err, values) => {
       if (!err) {
-        const { baseUrl, site, names, pac } = values;
+        const { baseUrl, site, names, pac, teamId, share } = values;
         const data = {
           baseUrl,
           site,
           subPages: names.filter(i => i),
-          pac
+          pac,
+          team: share ? teamId : null
         };
         createComponent(data);
         this.setState({
@@ -51,7 +52,7 @@ class Component extends React.Component {
 
   render() {
     const { visible, loading } = this.state;
-    const { data, findComponent, deleteComponent, t } = this.props;
+    const { data, findComponent, deleteComponent, teamData, t } = this.props;
     const columns = [
       {
         title: 'Site',
@@ -84,6 +85,18 @@ class Component extends React.Component {
         title: 'Filename',
         dataIndex: 'filename',
         key: 'filename'
+      },
+      {
+        title: 'Team',
+        dataIndex: 'team',
+        key: 'team',
+        // 这里要防御列表数据先取到，teamData后取到的情况
+        render: teamId => (teamData.find(i => i._id === teamId) || {}).teamName || 'private'
+      },
+      {
+        title: 'Creator',
+        dataIndex: 'creator',
+        key: 'creator'
       },
       {
         title: 'Action',
@@ -167,7 +180,8 @@ class Component extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  data: state.componentData || []
+  data: state.componentData || [],
+  teamData: state.teamData || []
 });
 
 export default connect(mapStateToProps, {

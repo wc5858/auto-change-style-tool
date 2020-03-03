@@ -10,7 +10,8 @@ module.exports = app => {
       // 创建任务
       const res = await component.create(
         Object.assign(data, {
-          state: '执行中'
+          state: '执行中',
+          creator: ctx.session.username
         })
       );
       // 异步执行任务，无需等待任务完成
@@ -44,7 +45,7 @@ module.exports = app => {
     async findComponent() {
       const { ctx } = this;
       const { component } = ctx.service;
-      const data = await component.find();
+      const data = await component.findByUser();
       ctx.body = {
         success: true,
         data

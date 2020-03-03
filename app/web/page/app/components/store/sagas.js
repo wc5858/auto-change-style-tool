@@ -19,7 +19,8 @@ import {
   INVITE,
   DECLINE,
   USER_INFO,
-  JOIN
+  JOIN,
+  LOGOUT
 } from './constant';
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -248,6 +249,18 @@ const getUserInfoAsync = function*(showMessage = false) {
   }
 };
 
+const logoutAsync = function*() {
+  const response = yield call(axios, {
+    method: 'post',
+    url: '/api/v1/user/logout'
+  });
+  if (response.data && response.data.success) {
+    message.success('操作成功！');
+  } else {
+    message.error(response.data.error);
+  }
+};
+
 const watcher = function*() {
   yield takeEvery(CREATE_COLOR, createColorAsync);
   yield takeEvery(FIND_COLOR, findColorAsync);
@@ -267,6 +280,8 @@ const watcher = function*() {
 
   yield takeEvery(DECLINE, declineInvitationAsync);
   yield takeEvery(JOIN, joinAsync);
+
+  yield takeEvery(LOGOUT, logoutAsync);
 };
 
 // notice how we now only export the rootSaga

@@ -9,7 +9,8 @@ module.exports = app => {
       // 创建任务
       const res = await color.create(
         Object.assign(data, {
-          state: '执行中'
+          state: '执行中',
+          creator: ctx.session.username
         })
       );
       // 异步执行任务，无需等待任务完成
@@ -41,7 +42,7 @@ module.exports = app => {
     async findColor() {
       const { ctx } = this;
       const { color } = ctx.service;
-      const data = await color.find();
+      const data = await color.findByUser();
       ctx.body = {
         success: true,
         data

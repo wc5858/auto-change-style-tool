@@ -1,3 +1,5 @@
+const Mongoose = require('mongoose');
+
 module.exports = app => {
   const mongoose = app.mongoose;
   const Schema = mongoose.Schema;
@@ -28,6 +30,13 @@ module.exports = app => {
     },
     result: {
       type: Object
+    },
+    creator: {
+      type: String
+    },
+    team: { 
+      type: Mongoose.Schema.ObjectId,
+      ref: 'Team' 
     }
   });
 

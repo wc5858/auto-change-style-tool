@@ -12,9 +12,9 @@ module.exports = app => {
       }
       const { color, component, task, team, user } = ctx.service;
       const [colorData, componentData, taskData, teamData, invitation] = await Promise.all([
-        color.find(),
-        component.find(),
-        task.find(),
+        color.findByUser(),
+        component.findByUser(),
+        task.findByUser(),
         team.find(username),
         user.findInvitation(username)
       ]);
@@ -37,7 +37,7 @@ module.exports = app => {
       if (!username) {
         ctx.body = {
           success: false,
-          error: '未登录'
+          error: 'Not logged in'
         };
         return;
       }
@@ -62,6 +62,15 @@ module.exports = app => {
       });
     }
 
+    async logout() {
+      const { ctx } = this;
+      delete ctx.session.username;
+      delete ctx.session.remember;
+      ctx.body = {
+        success: true
+      };
+    }
+
     async handleLogin() {
       const { ctx } = this;
       const { username, password, remember } = ctx.request.body;
@@ -79,7 +88,7 @@ module.exports = app => {
       }
       ctx.body = {
         success: false,
-        error: '用户名或密码错误'
+        error: 'Wrong user name or password'
       };
     }
 
@@ -97,7 +106,7 @@ module.exports = app => {
       if (userRecord) {
         ctx.body = {
           success: false,
-          error: '该用户已存在'
+          error: 'The user already exists'
         };
         return;
       }
@@ -114,7 +123,7 @@ module.exports = app => {
       } else {
         ctx.body = {
           success: false,
-          error: '注册信息错误'
+          error: 'Registration information error'
         };
       }
     }

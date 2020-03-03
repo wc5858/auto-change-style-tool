@@ -1,3 +1,5 @@
+const Mongoose = require('mongoose');
+
 module.exports = app => {
   const mongoose = app.mongoose;
   const Schema = mongoose.Schema;
@@ -23,7 +25,14 @@ module.exports = app => {
     time: {
       type: Number
     },
-    filename: String
+    filename: String,
+    creator: {
+      type: String
+    },
+    team: { 
+      type: Mongoose.Schema.ObjectId,
+      ref: 'Team' 
+    }
   });
 
   return mongoose.model('Component', schema);

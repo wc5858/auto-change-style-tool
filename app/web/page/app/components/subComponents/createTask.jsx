@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Form, Input, Select, Divider, Icon, Tooltip } from 'antd';
+import { Form, Input, Select, Divider, Icon, Tooltip, Checkbox } from 'antd';
 import { withTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 class CreateTask extends Component {
   render() {
-    const { form, colorData, componentData, t } = this.props;
+    const { form, colorData, componentData, teamData, t } = this.props;
+    const filteredComponentData = componentData.filter(item => !item.err && item.state === '执行成功');
+    const filteredColorData = colorData.filter(item => !item.err && item.state === '执行成功');
     const { getFieldDecorator } = form;
     const formItemLayout = {
       labelCol: {
@@ -15,6 +18,12 @@ class CreateTask extends Component {
       wrapperCol: {
         xs: { span: 24 },
         sm: { span: 20 }
+      }
+    };
+    const formItemLayoutWithOutLabel = {
+      wrapperCol: {
+        xs: { span: 24, offset: 0 },
+        sm: { span: 20, offset: 4 }
       }
     };
     return (
@@ -48,21 +57,28 @@ class CreateTask extends Component {
           })(<Input />)}
         </Form.Item>
         <Divider>{t('更换组件')}</Divider>
-        <Form.Item label={t('组件数据源')}>
-          {getFieldDecorator('componentDataId', {
-            initialValue: [componentData[0]._id]
-          })(
-            <Select mode="multiple">
-              {componentData
-                .filter(item => !item.err)
-                .map(({ _id, site }) => (
-                  <Option value={_id} key={_id}>
-                    {site}
-                  </Option>
-                ))}
-            </Select>
-          )}
-        </Form.Item>
+
+        {
+          filteredComponentData.length > 0 ?
+            <Form.Item label={t('组件数据源')}>
+              {getFieldDecorator('componentDataId', {
+                initialValue: [filteredComponentData[0]._id]
+              })(
+                <Select mode="multiple">
+                  {filteredComponentData
+                    .filter(item => !item.err)
+                    .map(({ _id, site }) => (
+                      <Option value={_id} key={_id}>
+                        {site}
+                      </Option>
+                    ))}
+                </Select>
+              )}
+            </Form.Item> :
+            <Form.Item {...formItemLayoutWithOutLabel}>
+              <Link to="/component">{t('没有可用的组件数据，去创建')}</Link>
+            </Form.Item>
+        }
         <Form.Item label={t('分片粒度')}>
           {getFieldDecorator('pac', {
             initialValue: 5,
@@ -104,21 +120,26 @@ class CreateTask extends Component {
           })(<Input />)}
         </Form.Item>
         <Divider>{t('更换颜色')}</Divider>
-        <Form.Item label={t('颜色数据源')}>
-          {getFieldDecorator('colorDataId', {
-            initialValue: colorData[0]._id
-          })(
-            <Select>
-              {colorData
-                .filter(item => !item.err)
-                .map(({ _id, site }) => (
-                  <Option value={_id} key={_id}>
-                    {site}
-                  </Option>
-                ))}
-            </Select>
-          )}
-        </Form.Item>
+        {
+          filteredColorData.length > 0 ?
+            <Form.Item label={t('颜色数据源')}>
+              {getFieldDecorator('colorDataId', {
+                initialValue: filteredColorData[0]._id
+              })(
+                <Select>
+                  {filteredColorData
+                    .map(({ _id, site }) => (
+                      <Option value={_id} key={_id}>
+                        {site}
+                      </Option>
+                    ))}
+                </Select>
+              )}
+            </Form.Item> :
+            <Form.Item {...formItemLayoutWithOutLabel}>
+              <Link to="/color">{t('没有可用的颜色数据，去创建')}</Link>
+            </Form.Item>
+        }
         <Form.Item label={t('背景色替换规则')}>
           {getFieldDecorator('bgMappingType', {
             initialValue: 'area'
@@ -132,6 +153,36 @@ class CreateTask extends Component {
             </Select>
           )}
         </Form.Item>
+        <Form.Item {...formItemLayoutWithOutLabel}>
+          {getFieldDecorator('share', {
+            valuePropName: 'checked',
+            initialValue: true
+          })(<Checkbox>{t('分享到团队')}</Checkbox>)}
+        </Form.Item>
+        {
+
+          form.getFieldValue('share') &&
+          (
+            teamData.length > 0 ?
+              <Form.Item label={t('团队')}>
+                {getFieldDecorator('teamId', {
+                  initialValue: teamData[0]._id
+                })(
+                  <Select>
+                    {teamData
+                      .map(({ _id, teamName }) => (
+                        <Select.Option value={_id} key={_id}>
+                          {teamName}
+                        </Select.Option>
+                      ))}
+                  </Select>
+                )}
+              </Form.Item> :
+              <Form.Item {...formItemLayoutWithOutLabel}>
+                <Link to="/teams">{t('没有团队，去创建')}</Link>
+              </Form.Item>
+          )
+        }
       </Form>
     );
   }
@@ -141,7 +192,9 @@ class CreateTask extends Component {
 const WrappedCreateTask = Form.create({ name: 'create_task' })(
   connect(state => ({
     colorData: state.colorData,
-    componentData: state.componentData
+    componentData: state.componentData,
+    teamData: state.teamData || [],
+    userInfo: state.userInfo || {}
   }))(withTranslation('translation', { withRef: true })(CreateTask))
 );
 export default WrappedCreateTask;

@@ -24,7 +24,7 @@ class RegisterPage extends Component {
         if (values.password !== values.repeatPassword) {
           this.setState({
             alert: true,
-            content: '两次密码不相同'
+            content: 'The passwords entered are different'
           });
         } else {
           this.setState({
@@ -41,7 +41,7 @@ class RegisterPage extends Component {
                 success: true
               });
             } else {
-              message.error(`注册失败:${res.data.error}`);
+              message.error(`registration failed: ${res.data.error}`);
             }
           });
         }
@@ -103,7 +103,7 @@ class RegisterPage extends Component {
       </Form>}
       {success && <Result
         status="success"
-        title="注册成功！"
+        title="Register success"
         extra={[
           <Button type="primary" key="goLogin" onClick={() => location.href = '/login'}>
             Go Login

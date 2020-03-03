@@ -12,7 +12,8 @@ import {
   FIND_TEAM,
   INVITE,
   DECLINE,
-  JOIN
+  JOIN,
+  LOGOUT
 } from './constant';
 
 export const createColor = data => ({
@@ -79,4 +80,8 @@ export const decline = data => ({
 export const join = data => ({
   type: JOIN,
   data
+});
+
+export const logout = () => ({
+  type: LOGOUT
 });

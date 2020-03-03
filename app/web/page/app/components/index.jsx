@@ -27,7 +27,7 @@ class App extends React.Component {
   };
 
   render() {
-    const name = this.props.url.replace('/', '');
+    const name = (process.browser ? location.pathname : this.props.url).replace('/', '');
     const { userInfo, t } = this.props;
     return (
       <Layout>
@@ -35,6 +35,7 @@ class App extends React.Component {
           <div className="logo" />
           <Menu
             defaultSelectedKeys={[name || 'dashboard']}
+            selectedKeys={[name || 'dashboard']}
             defaultOpenKeys={['tools']}
             mode="inline"
             theme="dark"
