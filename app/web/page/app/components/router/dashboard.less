@@ -7,22 +7,19 @@
   word-break: break-all;
 }
 
-.dashboard-members {
-  a {
+.dashboard-teams {
+  .dashboard-team {
     display: block;
     height: 24px;
     margin: 12px 0;
     color: @text-color;
     transition: all 0.3s;
     .textOverflow();
-    .dashboard-member {
+    .team-name {
       margin-left: 12px;
       font-size: @font-size-base;
       line-height: 24px;
       vertical-align: top;
-    }
-    &:hover {
-      color: @primary-color;
     }
   }
 }

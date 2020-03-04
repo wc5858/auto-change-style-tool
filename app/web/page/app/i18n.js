@@ -81,7 +81,10 @@ const resources = {
       '成员可邀请其他人加入': 'members can invite others to join',
       '用户名': 'username',
       '请输入用户名!': 'please input username',
-      '邀请用户': 'invite'
+      '邀请用户': 'invite',
+      '近期任务': 'recent task',
+      '近期颜色数据': 'recent color data',
+      '近期组件数据': 'recent component data'
     }
   }
 };

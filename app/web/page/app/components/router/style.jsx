@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createTask, findTask } from '../store/actions';
-import { Row, Modal, Button, Table, Steps } from 'antd';
+import { Row, Modal, Button, Table, Steps, message } from 'antd';
 import CreateTask from '../subComponents/createTask';
 import HtmlModal from '../subComponents/htmlModal';
 import { withTranslation } from 'react-i18next';
@@ -52,12 +52,17 @@ class Style extends Component {
     this.setState({ loading: true });
     this.refs.taskForm.validateFields((err, values) => {
       if (!err) {
-        createTask(values);
-        this.setState({
-          loading: false,
-          visible: false
-        });
-        this.refs.taskForm.resetFields();
+        if (values.componentDataId && values.colorDataId) {
+          createTask(values);
+          this.setState({
+            loading: false,
+            visible: false
+          });
+          this.refs.taskForm.resetFields();
+        } else {
+          message.error('Missing data source');
+          this.setState({ loading: false });
+        }
       } else {
         this.setState({ loading: false });
       }
