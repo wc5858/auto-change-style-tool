@@ -14,6 +14,11 @@ export const COMPONENT_DATA = 'COMPONENT_DATA';
 export const DELETE_COMPONENT = 'DELETE_COMPONENT';
 export const GET_NANO_CSS = 'GET_NANO_CSS';
 
+export const CREATE_CATCHER = 'CREATE_CATCHER';
+export const FIND_CATCHER = 'FIND_CATCHER';
+export const CATCHER_DATA = 'CATCHER_DATA';
+export const DELETE_CATCHER = 'DELETE_CATCHER';
+
 export const CREATE_TEAM = 'CREATE_TEAM';
 export const FIND_TEAM = 'FIND_TEAM';
 export const TEAM_DATA = 'TEAM_DATA';
