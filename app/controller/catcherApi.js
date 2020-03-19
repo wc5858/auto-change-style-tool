@@ -11,7 +11,8 @@ module.exports = app => {
       const res = await catcher.create(
         Object.assign(data, {
           state: '执行中',
-          creator: ctx.session.username
+          creator: ctx.session.username,
+          team: data.share ? data.teamId : null
         })
       );
       // 异步执行任务，无需等待任务完成
@@ -25,6 +26,8 @@ module.exports = app => {
           {
             url: taskData.url,
             html: taskData.result.bodyHTML
+          },{
+            headless: false
           }
         )
         await catcherExecutor.init();

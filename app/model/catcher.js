@@ -16,10 +16,6 @@ module.exports = app => {
     err: {
       type: String
     },
-    time: {
-      type: Number
-    },
-    filename: String,
     creator: {
       type: String
     },

@@ -9,9 +9,9 @@ class CatcherExecutor {
 
   }
   
-  async init(options) {
+  async init() {
     this.driver = await drivers.getChromeDriver(this.headless);
-    const { url } = options;
+    const { url } = this.options;
     await this.driver.get(url);
   }
 
@@ -21,7 +21,7 @@ class CatcherExecutor {
   }
 
   async finish() {
-    this.result.data = await getResult(this.driver);
+    // this.result.data = await getResult(this.driver);
     this.result.success = true;
     this.driver.close();
     return this.result;
