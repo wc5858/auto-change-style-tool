@@ -20,7 +20,8 @@ import {
   DECLINE,
   USER_INFO,
   JOIN,
-  LOGOUT
+  LOGOUT,
+  GET_USER_INFO
 } from './constant';
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -240,6 +241,7 @@ const getUserInfoAsync = function*(showMessage = false) {
   });
   if (response.data && response.data.success) {
     showMessage && message.success('操作成功！');
+    console.log(showMessage)
     yield put({
       type: USER_INFO,
       data: response.data.userInfo
@@ -282,6 +284,7 @@ const watcher = function*() {
   yield takeEvery(JOIN, joinAsync);
 
   yield takeEvery(LOGOUT, logoutAsync);
+  yield takeEvery(GET_USER_INFO, getUserInfoAsync, false);
 };
 
 // notice how we now only export the rootSaga

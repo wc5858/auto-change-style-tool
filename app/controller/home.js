@@ -5,7 +5,7 @@ module.exports = app => {
   return class AppController extends app.Controller {
     async index() {
       const { ctx } = this;
-      const { username } = ctx.session;
+      const { username, subscription } = ctx.session;
       if (!username) {
         ctx.redirect('/login');
         return;
@@ -26,14 +26,15 @@ module.exports = app => {
         teamData,
         userInfo: {
           username,
-          invitation
+          invitation,
+          subscribed: !!subscription
         }
       });
     }
 
     async getUserInfo() {
       const { ctx } = this;
-      const { username } = ctx.session;
+      const { username, subscription } = ctx.session;
       if (!username) {
         ctx.body = {
           success: false,
@@ -46,7 +47,8 @@ module.exports = app => {
         success: true,
         userInfo: {
           username,
-          invitation: await user.findInvitation(username)
+          invitation: await user.findInvitation(username),
+          subscribed: !!subscription
         }
       };
     }

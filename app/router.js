@@ -46,4 +46,11 @@ module.exports = app => {
   app.post('/api/v1/team/invite', invite);
   app.post('/api/v1/team/decline', decline);
   app.post('/api/v1/team/join', join);
+  
+  const { key, subscribe, cancel, test } = app.controller.notificationApi;
+
+  app.post('/api/v1/notification/key', key);
+  app.post('/api/v1/notification/subscribe', subscribe);
+  app.post('/api/v1/notification/cancel', cancel);
+  app.post('/api/v1/notification/test', test);
 };

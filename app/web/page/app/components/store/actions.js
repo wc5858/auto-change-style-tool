@@ -13,7 +13,8 @@ import {
   INVITE,
   DECLINE,
   JOIN,
-  LOGOUT
+  LOGOUT,
+  GET_USER_INFO
 } from './constant';
 
 export const createColor = data => ({
@@ -84,4 +85,8 @@ export const join = data => ({
 
 export const logout = () => ({
   type: LOGOUT
+});
+
+export const updateUserInfo = () => ({
+  type: GET_USER_INFO
 });

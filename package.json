@@ -62,7 +62,8 @@
     "sharp": "^0.23.3",
     "stream-to-string": "^1.2.0",
     "synonyms": "^1.0.1",
-    "urijs": "^1.19.2"
+    "urijs": "^1.19.2",
+    "web-push": "^3.4.3"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.3",
