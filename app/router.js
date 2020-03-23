@@ -1,4 +1,3 @@
-
 module.exports = app => {
 
   const { index, login, handleLogin, register, handleRegister, getUserInfo, logout } = app.controller.home;
@@ -38,7 +37,13 @@ module.exports = app => {
   app.post('/api/v1/component/create', createComponent);
   app.post('/api/v1/component/find', findComponent);
   app.post('/api/v1/component/delete', deleteComponent);
-  
+
+  const { createCatcher, findCatcher, deleteCatcher } = app.controller.catcherApi;
+
+  app.post('/api/v1/catcher/create', createCatcher);
+  app.post('/api/v1/catcher/find', findCatcher);
+  app.post('/api/v1/catcher/delete', deleteCatcher);
+
   const { createTeam, findTeam, invite, decline, join } = app.controller.teamApi;
 
   app.post('/api/v1/team/create', createTeam);
@@ -46,7 +51,7 @@ module.exports = app => {
   app.post('/api/v1/team/invite', invite);
   app.post('/api/v1/team/decline', decline);
   app.post('/api/v1/team/join', join);
-  
+
   const { key, subscribe, cancel, test } = app.controller.notificationApi;
 
   app.post('/api/v1/notification/key', key);

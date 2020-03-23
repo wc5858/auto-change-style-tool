@@ -10,6 +10,10 @@ import {
   CREATE_COMPONENT,
   FIND_COMPONENT,
   DELETE_COMPONENT,
+  CREATE_CATCHER,
+  FIND_CATCHER,
+  DELETE_CATCHER,
+  CATCHER_DATA,
   COMPONENT_DATA,
   GET_NANO_CSS,
   CSS_DATA,
@@ -29,7 +33,7 @@ import { message } from 'antd';
 
 axios.defaults.headers['x-csrf-token'] = Cookies.get('csrfToken');
 
-const createColorAsync = function*(action) {
+const createColorAsync = function* (action) {
   const response = yield call(axios, {
     method: 'post',
     url: '/api/v1/color/create',
@@ -42,7 +46,7 @@ const createColorAsync = function*(action) {
   }
 };
 
-const findColorAsync = function*(showMessage = true) {
+const findColorAsync = function* (showMessage = true) {
   const response = yield call(axios, {
     method: 'post',
     url: '/api/v1/color/find'
@@ -58,7 +62,7 @@ const findColorAsync = function*(showMessage = true) {
   }
 };
 
-const deleteColorAsync = function*(action) {
+const deleteColorAsync = function* (action) {
   const response = yield call(axios, {
     method: 'post',
     url: '/api/v1/color/delete',
@@ -74,7 +78,7 @@ const deleteColorAsync = function*(action) {
   }
 };
 
-const createTaskAsync = function*(action) {
+const createTaskAsync = function* (action) {
   const response = yield call(axios, {
     method: 'post',
     url: '/api/v1/task/create',
@@ -87,7 +91,7 @@ const createTaskAsync = function*(action) {
   }
 };
 
-const findTaskAsync = function*(showMessage = true) {
+const findTaskAsync = function* (showMessage = true) {
   const response = yield call(axios, {
     method: 'post',
     url: '/api/v1/task/find'
@@ -103,7 +107,7 @@ const findTaskAsync = function*(showMessage = true) {
   }
 };
 
-const createComponentAsync = function*(action) {
+const createComponentAsync = function* (action) {
   const response = yield call(axios, {
     method: 'post',
     url: '/api/v1/component/create',
@@ -116,7 +120,7 @@ const createComponentAsync = function*(action) {
   }
 };
 
-const findComponentAsync = function*(showMessage = true) {
+const findComponentAsync = function* (showMessage = true) {
   const response = yield call(axios, {
     method: 'post',
     url: '/api/v1/component/find'
@@ -132,7 +136,7 @@ const findComponentAsync = function*(showMessage = true) {
   }
 };
 
-const deleteComponentAsync = function*(action) {
+const deleteComponentAsync = function* (action) {
   const response = yield call(axios, {
     method: 'post',
     url: '/api/v1/component/delete',
@@ -148,7 +152,53 @@ const deleteComponentAsync = function*(action) {
   }
 };
 
-const getNanoCssAsync = function*(action) {
+
+const createCatcherAsync = function* (action) {
+  const response = yield call(axios, {
+    method: 'post',
+    url: '/api/v1/catcher/create',
+    data: action.data
+  });
+  if (response.data && response.data.success) {
+    message.success('操作成功！');
+  } else {
+    message.error('操作失败');
+  }
+};
+
+const findCatcherAsync = function* (showMessage = true) {
+  const response = yield call(axios, {
+    method: 'post',
+    url: '/api/v1/catcher/find'
+  });
+  if (response.data && response.data.success) {
+    showMessage && message.success('操作成功！');
+    yield put({
+      type: CATCHER_DATA,
+      data: response.data.data
+    });
+  } else {
+    message.error('获取数据失败');
+  }
+};
+
+const deleteCatcherAsync = function* (action) {
+  const response = yield call(axios, {
+    method: 'post',
+    url: '/api/v1/catcher/delete',
+    data: {
+      id: action.id
+    }
+  });
+  if (response.data && response.data.success) {
+    message.success('操作成功！');
+    yield call(findCatcherAsync, false);
+  } else {
+    message.error('获取数据失败');
+  }
+};
+
+const getNanoCssAsync = function* (action) {
   const response = yield call(axios, {
     method: 'post',
     url: '/api/v1/task/getNanoCss',
@@ -162,7 +212,7 @@ const getNanoCssAsync = function*(action) {
   });
 };
 
-const createTeamAsync = function*(action) {
+const createTeamAsync = function* (action) {
   const response = yield call(axios, {
     method: 'post',
     url: '/api/v1/team/create',
@@ -176,7 +226,7 @@ const createTeamAsync = function*(action) {
   }
 };
 
-const findTeamAsync = function*(showMessage = false) {
+const findTeamAsync = function* (showMessage = false) {
   const response = yield call(axios, {
     method: 'post',
     url: '/api/v1/team/find'
@@ -192,7 +242,7 @@ const findTeamAsync = function*(showMessage = false) {
   }
 };
 
-const inviteAsync = function*(action) {
+const inviteAsync = function* (action) {
   const response = yield call(axios, {
     method: 'post',
     url: '/api/v1/team/invite',
@@ -205,7 +255,7 @@ const inviteAsync = function*(action) {
   }
 };
 
-const declineInvitationAsync = function*(action) {
+const declineInvitationAsync = function* (action) {
   const response = yield call(axios, {
     method: 'post',
     url: '/api/v1/team/decline',
@@ -219,7 +269,7 @@ const declineInvitationAsync = function*(action) {
   }
 };
 
-const joinAsync = function*(action) {
+const joinAsync = function* (action) {
   const response = yield call(axios, {
     method: 'post',
     url: '/api/v1/team/join',
@@ -234,14 +284,13 @@ const joinAsync = function*(action) {
   }
 };
 
-const getUserInfoAsync = function*(showMessage = false) {
+const getUserInfoAsync = function* (showMessage = false) {
   const response = yield call(axios, {
     method: 'post',
     url: '/api/v1/user/info'
   });
   if (response.data && response.data.success) {
     showMessage && message.success('操作成功！');
-    console.log(showMessage)
     yield put({
       type: USER_INFO,
       data: response.data.userInfo
@@ -251,7 +300,7 @@ const getUserInfoAsync = function*(showMessage = false) {
   }
 };
 
-const logoutAsync = function*() {
+const logoutAsync = function* () {
   const response = yield call(axios, {
     method: 'post',
     url: '/api/v1/user/logout'
@@ -263,7 +312,7 @@ const logoutAsync = function*() {
   }
 };
 
-const watcher = function*() {
+const watcher = function* () {
   yield takeEvery(CREATE_COLOR, createColorAsync);
   yield takeEvery(FIND_COLOR, findColorAsync);
   yield takeEvery(DELETE_COLOR, deleteColorAsync);
@@ -275,6 +324,10 @@ const watcher = function*() {
   yield takeEvery(CREATE_COMPONENT, createComponentAsync);
   yield takeEvery(FIND_COMPONENT, findComponentAsync);
   yield takeEvery(DELETE_COMPONENT, deleteComponentAsync);
+
+  yield takeEvery(CREATE_CATCHER, createCatcherAsync);
+  yield takeEvery(FIND_CATCHER, findCatcherAsync);
+  yield takeEvery(DELETE_CATCHER, deleteCatcherAsync);
 
   yield takeEvery(CREATE_TEAM, createTeamAsync);
   yield takeEvery(FIND_TEAM, findTeamAsync);

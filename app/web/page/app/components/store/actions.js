@@ -7,6 +7,9 @@ import {
   CREATE_COMPONENT,
   FIND_COMPONENT,
   DELETE_COMPONENT,
+  CREATE_CATCHER,
+  FIND_CATCHER,
+  DELETE_CATCHER,
   GET_NANO_CSS,
   CREATE_TEAM,
   FIND_TEAM,
@@ -51,6 +54,20 @@ export const findComponent = () => ({
 
 export const deleteComponent = id => ({
   type: DELETE_COMPONENT,
+  id
+});
+
+export const createCatcher = data => ({
+  type: CREATE_CATCHER,
+  data
+});
+
+export const findCatcher = () => ({
+  type: FIND_CATCHER
+});
+
+export const deleteCatcher = id => ({
+  type: DELETE_CATCHER,
   id
 });
 

@@ -11,10 +11,11 @@ module.exports = app => {
         return;
       }
       const { color, component, task, team, user } = ctx.service;
-      const [colorData, componentData, taskData, teamData, invitation] = await Promise.all([
+      const [colorData, componentData, taskData, catcherData, teamData, invitation] = await Promise.all([
         color.findByUser(),
         component.findByUser(),
         task.findByUser(),
+        catcher.findByUser(),
         team.find(username),
         user.findInvitation(username)
       ]);
@@ -23,6 +24,7 @@ module.exports = app => {
         colorData,
         componentData,
         taskData,
+        catcherData,
         teamData,
         userInfo: {
           username,
