@@ -101,7 +101,8 @@ module.exports = async function(
     }
     maxs.push(max);
     // 找到匹配项大于这个阈值时才执行替换
-    if (max > options.threshold2) {
+    const fixedThreshold2 = options.threshold2 * (1 + Math.PI / 2 - Math.atan(i.tagSequence.length));
+    if (max > fixedThreshold2) {
       // 执行一次深拷贝
       const copyNode = JSON.parse(JSON.stringify(i.similarity.node));
       map[i.node.id] = replaceNodeContents(
@@ -151,7 +152,7 @@ module.exports = async function(
   await driver.executeScript(function() {
     document.body.style['overflow-x'] = 'hidden';
   });
-  return {
-    bodyHTML
-  };
+  // return {
+  //   bodyHTML
+  // };
 };

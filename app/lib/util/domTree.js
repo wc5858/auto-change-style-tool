@@ -35,7 +35,7 @@ const getNodeInfo = node => {
     class: node.classList.value.split(' '),
     usedCss: node.getAttribute('data-used-css') || null
   };
-  if (data.tag == 'IMG') {
+  if (data.tag.toLowerCase() == 'img') {
     data.src = node.currentSrc;
   }
   return data;
@@ -63,7 +63,7 @@ const isExcluded = node => {
     'HR',
     'NOSCRIPT'
   ];
-  return node ? excludeList.includes(node.tagName || node.localName) : false;
+  return node ? excludeList.includes(node.tagName.toUpperCase() || node.localName.toUpperCase()) : false;
 };
 
 const isText = node => {
@@ -126,14 +126,32 @@ const createTree = domNode => {
       if (node.info.offsetWidth * node.info.offsetHeight) {
         node.type = 'empty';
       } else {
-        return null;
+        if (!['path', 'g'].includes(node.info.tag.toLowerCase())) {
+          return null;
+        }
       }
+      node.type = 'empty';
     } else if (children.length == 1 && typeof children[0] == 'string') {
       node.type = 'text';
       node.content = children[0];
     } else {
       node.children = children;
     }
+
+    if (domNode.tagName.toLowerCase() === 'svg') {
+      node.type = 'svg';
+      node.selfHTML = domNode.outerHTML;
+    }
+    
+    if (domNode.tagName.toLowerCase() == 'input' && (domNode.getAttribute('type') === 'submit' || domNode.getAttribute('type') === 'button')) {
+      node.info.tag = 'BUTTON';
+      node.children = null;
+      node.content = domNode.getAttribute('value');
+    }
+    // if (domNode.tagName.toLowerCase() == 'input') {
+    //   node.inputType = domNode.getAttribute('type');
+    //   node.inputValue = domNode.getAttribute('value');
+    // }
     return node;
   }
   return null;
@@ -149,19 +167,30 @@ const rebuildHTML = (treeNode, isReplaced) => {
   if (!treeNode.info) {
     return '';
   }
+  if (treeNode.type === 'svg') {
+    return treeNode.selfHTML;
+  }
   let innerHTML = treeNode.children
     ? treeNode.children.reduce((pre, cur) => pre + rebuildHTML(cur, treeNode.isReplaced), '')
     : treeNode.content
       ? treeNode.content
       : '';
   const tag = treeNode.info.tag;
+
   const style = treeNode.isReplaced || isReplaced ? mergeCss(treeNode.info.css) : treeNode.info.style;
   // const style = mergeCss(treeNode.info.css);
-  return `<${tag} class="${treeNode.info.class.join(' ')}" parent="${treeNode.info.pre}" ${
+  const res = `<${tag} class="${treeNode.info.class.join(' ')}" parent="${treeNode.info.pre}" ${
     tag == 'IMG' ? `src="${treeNode.info.src}"` : ''
   } ${treeNode.id ? `data-id="${treeNode.id}"` : ''} ${
     treeNode.isReplaced ? 'data-replaced="1"' : ''
-  } style='${style}' data-used-css='${treeNode.info.usedCss}' ${treeNode.info.id ? id=`${treeNode.info.id}` : ''}>${innerHTML}</${tag}>`;
+  } style='${style}' data-used-css='${treeNode.info.usedCss}' ${treeNode.info.id ? `id=${treeNode.info.id}` : ''} 
+    >${innerHTML}</${tag}>`;
+    
+  // ${treeNode.inputType ? `type=${treeNode.inputType}` : ''} ${treeNode.inputValue ? `type=${treeNode.inputValue}` : ''}
+  // if (res.indexOf('button<') >= 0) {
+  //   console.log(tag)
+  // }
+  return res;
 };
 
 module.exports = {

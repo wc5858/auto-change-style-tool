@@ -1489,40 +1489,34 @@ function logicalObject(obj) {
 /* relative area granularity */
 
 function relativeArea(dim,docdim) {
-		var d=0;
-		
-		var x = Math.round(100*dim.x/docdim.w);
-		var w = Math.round(100*dim.w/docdim.w);
-		var y = Math.round(100*dim.y/docdim.h);
-		var h = Math.round(100*dim.h/docdim.h);
-		
-		var dh = w-x;
-		var dv = h-y;
-		
-		d = Math.round(((dh+dv)/2)/10);
-		
-		return(d);
+    var w = 10*dim.w/docdim.w;
+    // var h = 10*dim.h/docdim.h;
+    var h = 10*dim.h/window.screen.availHeight;
+    
+    d = Math.ceil((w + h) / 2);
+    
+    return d;
 }
 
 
-function relativeArea2(dim,docdim) {
-		var cont = 0;
-		for (var i = 0; i < 100; i += 10) {
-			if ((100 * dim.w / docdim.w) > i)
-				cont++;
-		}
-		var dw = cont;
-		cont = 0;
-		for (var i = 0; i < 100; i += 10) {
-			if ((100 * dim.h / docdim.h) > i)
-				cont++;
-		}
-		var dh = cont;
+// function relativeArea2(dim,docdim) {
+// 		var cont = 0;
+// 		for (var i = 0; i < 100; i += 10) {
+// 			if ((100 * dim.w / docdim.w) > i)
+// 				cont++;
+// 		}
+// 		var dw = cont;
+// 		cont = 0;
+// 		for (var i = 0; i < 100; i += 10) {
+// 			if ((100 * dim.h / docdim.h) > i)
+// 				cont++;
+// 		}
+// 		var dh = cont;
 
-		var d=0;
-		if (dw!=0 && dh!=0) d = Math.round((dw+dh)/2);
-		return(d);
-}
+// 		var d=0;
+// 		if (dw!=0 && dh!=0) d = Math.round((dw+dh)/2);
+// 		return(d);
+// }
 
 function relativeAreaElement(element) {
 	return(relativeArea(getRect(element),documentDim()))

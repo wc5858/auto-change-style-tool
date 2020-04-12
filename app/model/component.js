@@ -25,7 +25,9 @@ module.exports = app => {
     time: {
       type: Number
     },
-    filename: String,
+    filename: {
+      type: String
+    },
     creator: {
       type: String
     },

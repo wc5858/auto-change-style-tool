@@ -19,7 +19,7 @@ const getChromeDriver = async (headless = true) => {
     .forBrowser('chrome')
     .setChromeOptions(
       options.windowSize({
-        height: 1000,
+        height: 4500,
         width: 1800
       })
     )

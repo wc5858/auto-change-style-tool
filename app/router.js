@@ -26,17 +26,20 @@ module.exports = app => {
   app.post('/api/v1/color/find', findColor);
   app.post('/api/v1/color/delete', deleteColor);
 
-  const { createTask, findTask, getNanoCss } = app.controller.taskApi;
+  const { createTask, findTask, getNanoCss, imgBase64, deleteTask } = app.controller.taskApi;
 
   app.post('/api/v1/task/create', createTask);
   app.post('/api/v1/task/find', findTask);
   app.post('/api/v1/task/getNanoCss', getNanoCss);
+  app.post('/api/v1/task/delete', deleteTask);
+  app.post('/api/v1/task/img/base64', imgBase64);
 
-  const { createComponent, findComponent, deleteComponent } = app.controller.componentApi;
+  const { createComponent, findComponent, deleteComponent, getData } = app.controller.componentApi;
 
   app.post('/api/v1/component/create', createComponent);
   app.post('/api/v1/component/find', findComponent);
   app.post('/api/v1/component/delete', deleteComponent);
+  app.post('/api/v1/component/data', getData);
 
   const { createCatcher, findCatcher, deleteCatcher } = app.controller.catcherApi;
 

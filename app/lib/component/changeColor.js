@@ -18,7 +18,7 @@ module.exports = async function(driver, colorData, bgMappingType = 'area') {
       const fontColorData = {};
       const getCss = util.dealCss(cssData, bgColorData, fontColorData);
       let html = '<!DOCTYPE html><head><meta charset="utf-8"></head><body>';
-      let all = document.body.getElementsByTagName('*');
+      let all = document.getElementsByTagName('*');
       for (let k = 0; k < all.length; k++) {
         getCss(all[k]);
       }
@@ -42,8 +42,8 @@ module.exports = async function(driver, colorData, bgMappingType = 'area') {
         fontColorData[i].lengthRatio = fontColorData[i].length / totalLength;
       }
 
-      const HIGH = 0.4;
-      const MID = 0.1;
+      const HIGH = 0.2;
+      const MID = 0.05;
 
       const analysisBgColor = data => {
         let colors = {

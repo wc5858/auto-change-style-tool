@@ -87,7 +87,7 @@ module.exports = async function(driver) {
                 // }
               }
             }
-            if (flag) {
+            if (!flag) {
               node.style.height = 'auto';
             } else {
               if (node.tagName !== 'BODY') {
@@ -110,7 +110,8 @@ module.exports = async function(driver) {
             }
             // console.log(node)
             if (scrollHeight > 6 * clientHeight) {
-              node.style.overflow = 'hidden';
+              return;
+              // node.style.overflow = 'hidden';
             } else {
               node.style.height = 'auto';
             }

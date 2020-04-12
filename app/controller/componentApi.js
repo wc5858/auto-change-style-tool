@@ -61,5 +61,16 @@ module.exports = app => {
         success: true
       };
     }
+
+    async getData() {
+      const { ctx } = this;
+      const { component, fs } = ctx.service;
+      const data = ctx.request.body;
+      console.log(data);
+      ctx.body = {
+        success: true,
+        data: await fs.read(data.filename)
+      };
+    }
   };
 };

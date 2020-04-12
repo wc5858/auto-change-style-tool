@@ -12,6 +12,9 @@ module.exports = async function(driver) {
     (async function() {
       const doms = [...document.querySelectorAll('*')];
       for (const dom of doms) {
+        // if (dom.tagName && dom.tagName === 'SVG') {
+        //   continue;
+        // }
         // const cur = + new Date();
         const res = await getUsedCSS(dom, false);
         if (res.success && res.css) {

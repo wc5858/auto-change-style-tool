@@ -5,6 +5,7 @@ export const DELETE_COLOR = 'DELETE_COLOR';
 
 export const CREATE_TASK = 'CREATE_TASK';
 export const FIND_TASK = 'FIND_TASK';
+export const DELETE_TASK = 'DELETE_TASK';
 export const TASK_DATA = 'TASK_DATA';
 export const CSS_DATA = 'CSS_DATA';
 

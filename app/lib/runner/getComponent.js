@@ -12,7 +12,7 @@ module.exports = async function(data) {
       await driver.get(baseUrl + page);
       await searchUsedCSS(driver);
       let node = await seg(driver, {
-        pac: 4,
+        pac,
         returnType: 'null',
         showBox: false
       });

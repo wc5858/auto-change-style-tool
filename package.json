@@ -60,6 +60,7 @@
     "redux-saga": "^1.1.1",
     "selenium-webdriver": "^4.0.0-alpha.5",
     "sharp": "^0.23.3",
+    "socket.io": "^2.3.0",
     "stream-to-string": "^1.2.0",
     "synonyms": "^1.0.1",
     "urijs": "^1.19.2",

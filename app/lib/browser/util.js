@@ -59,14 +59,18 @@ const replaceColor = (el, bgColorData, fontColorData) => {
     //   /(background-color\:rgb\()([^\)]+)/,
     //   '$1' + bgColorData[bgColor[1]].mappedColor
     // );
-    el.style.backgroundColor = `rgb(${bgColorData[bgColor[1]].mappedColor})`;
+    if (bgColorData[bgColor[1]].mappedColor) {
+      el.style.backgroundColor = `rgb(${bgColorData[bgColor[1]].mappedColor})`;
+    }
   }
   if (fontColor && fontColorData.hasOwnProperty(fontColor[1])) {
     // css = css.replace(
     //   /(color\:rgb\()([^\)]+)/,
     //   '$1' + fontColorData[fontColor[1]].mappedColor
     // );
-    el.style.color = `rgb(${fontColorData[fontColor[1]].mappedColor})`;
+    if (fontColorData[fontColor[1]].mappedColor) {
+      el.style.color = `rgb(${fontColorData[fontColor[1]].mappedColor})`;
+    }
   }
   // addCss(el, css);
 }
@@ -114,6 +118,7 @@ const dealCss = (cssData, bgColorData, fontColorData) => {
     let lcss = '';
     let cs = getComputedStyle(el);
     let body = document.getElementsByTagName('body')[0];
+    // console.log(el, el.localName )
     let sameTagEl = document.createElement(el.localName);
     body.appendChild(sameTagEl);
     let ds = getComputedStyle(sameTagEl);

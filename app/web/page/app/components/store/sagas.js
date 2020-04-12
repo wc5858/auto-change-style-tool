@@ -25,7 +25,8 @@ import {
   USER_INFO,
   JOIN,
   LOGOUT,
-  GET_USER_INFO
+  GET_USER_INFO,
+  DELETE_TASK
 } from './constant';
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -102,6 +103,22 @@ const findTaskAsync = function* (showMessage = true) {
       type: TASK_DATA,
       data: response.data.data
     });
+  } else {
+    message.error('获取数据失败');
+  }
+};
+
+const deleteTaskAsync = function* (action) {
+  const response = yield call(axios, {
+    method: 'post',
+    url: '/api/v1/task/delete',
+    data: {
+      id: action.id
+    }
+  });
+  if (response.data && response.data.success) {
+    message.success('操作成功！');
+    yield call(findTaskAsync, false);
   } else {
     message.error('获取数据失败');
   }
@@ -319,6 +336,7 @@ const watcher = function* () {
 
   yield takeEvery(CREATE_TASK, createTaskAsync);
   yield takeEvery(FIND_TASK, findTaskAsync);
+  yield takeEvery(DELETE_TASK, deleteTaskAsync);
   yield takeEvery(GET_NANO_CSS, getNanoCssAsync);
 
   yield takeEvery(CREATE_COMPONENT, createComponentAsync);

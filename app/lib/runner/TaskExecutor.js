@@ -4,6 +4,7 @@ const searchUsedCSS = require('../component/searchUsedCSS');
 const optimization = require('../component/optimization');
 const getResult = require('../component/getResult');
 const replaceComponent = require('../component/replaceComponent');
+const evaluate = require('../component/evaluate');
 const screenshot = require('../util/screenshot');
 
 class TaskExecutor {
@@ -21,7 +22,7 @@ class TaskExecutor {
   }
 
   // 包装每一步的公共操作
-  taskWrapper(callback, name) {
+  taskWrapper(callback, name, takeScreenshot = true) {
     return async options => {
       if (this.ended) {
         // 上一步出错，后续步骤直接跳过
@@ -45,7 +46,7 @@ class TaskExecutor {
           const { site } = this.options;
           const assignedOptions = Object.assign(this.options, options);
           const result = await callback(assignedOptions);
-          if (this.headless) {
+          if (this.headless && takeScreenshot) {
             const fileName = await screenshot(
               `${site}-${name}-${+new Date()}`,
               this.driver
@@ -103,6 +104,12 @@ class TaskExecutor {
         threshold2
       });
     }, 'replaceComponent')(options);
+  }
+
+  async evaluate(options) {
+    await this.taskWrapper(async options => {
+      return await evaluate(this.taskList[this.taskList.length - 2].screenshot);
+    }, 'evaluate', false)(options);
   }
 
   async finish() {

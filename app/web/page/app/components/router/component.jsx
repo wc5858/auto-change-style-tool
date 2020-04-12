@@ -1,5 +1,6 @@
 import React from 'react';
 import { Row, Modal, Button, Table } from 'antd';
+import axios from 'axios';
 import { connect } from 'react-redux';
 import {
   createComponent,
@@ -9,10 +10,56 @@ import {
 import AddComponent from '../subComponents/addComponent';
 import { withTranslation } from 'react-i18next';
 
+const mergeCss = css => {
+  let cssString = '';
+  for (const i in css) {
+    if (css.hasOwnProperty(i)) {
+      cssString += `${i}:${css[i]};`;
+    }
+  }
+  return cssString;
+};
+
+const rebuildHTML = (treeNode, isReplaced) => {
+  if (!treeNode) {
+    return '';
+  }
+  if (typeof treeNode == 'string') {
+    return treeNode;
+  }
+  if (!treeNode.info) {
+    return '';
+  }
+  let innerHTML = treeNode.children
+    ? treeNode.children.reduce((pre, cur) => pre + rebuildHTML(cur, treeNode.isReplaced), '')
+    : treeNode.content
+      ? treeNode.content
+      : '';
+  const tag = treeNode.info.tag;
+  // const style = treeNode.isReplaced || isReplaced ? mergeCss(treeNode.info.css) : treeNode.info.style;
+  const style = mergeCss(treeNode.info.css);
+  return `<${tag} class="${treeNode.info.class.join(' ')}" parent="${treeNode.info.pre}" ${
+    tag == 'IMG' ? `src="${treeNode.info.src}"` : ''
+  } ${treeNode.id ? `data-id="${treeNode.id}"` : ''} ${
+    treeNode.isReplaced ? 'data-replaced="1"' : ''
+  } style='${style}' data-used-css='${treeNode.info.usedCss}' ${treeNode.info.id ? `id=${treeNode.info.id}` : ''}>${innerHTML}</${tag}>`;
+};
+
+const listComponent = dataList => {
+  return dataList ? <div>{dataList.map(i => {
+    const html = rebuildHTML(i.node);
+    return <div style={{
+      padding: 20,
+      borderBottom: '1px solid gray'
+    }} dangerouslySetInnerHTML={{__html: html}}></div>
+  })}</div> : null;
+}
+
 class Component extends React.Component {
   state = {
     loading: false,
-    visible: false
+    visible: false,
+    data: {}
   };
 
   showModal = () => {
@@ -20,6 +67,24 @@ class Component extends React.Component {
       visible: true
     });
   };
+
+  getData = async record => {
+    // 赶时间，偷懒了
+    const res = await axios({
+      method: 'post',
+      url: '/api/v1/component/data',
+      data: {
+        filename: record.filename
+      }
+    });
+    const data = this.state.data;
+    if (res.data.success) {
+      data[record._id] = JSON.parse(res.data.data);
+      this.setState({
+        data
+      });
+    }
+  }
 
   handleOk = () => {
     const { createComponent } = this.props;
@@ -144,6 +209,10 @@ class Component extends React.Component {
                 </p>
                 <p style={{ margin: 0 }}>{record.subPages.join(',')}</p>
                 {extraInfo(record.err, 'Error')}
+                <Button onClick={() => this.getData(record)}>load data</Button>
+                {
+                  listComponent(this.state.data[record._id])
+                }
               </div>
             )}
             dataSource={data}

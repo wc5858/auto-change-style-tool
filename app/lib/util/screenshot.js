@@ -13,6 +13,12 @@ module.exports = async function(name, driver) {
     .window()
     .getRect();
   const windowHeight = windowSize.height;
+  if (scrollHeight <= windowHeight) {
+    const imgData = await driver.takeScreenshot();
+    const file = `./public/${name}.png`;
+    await writeFile(file, new Buffer(imgData, 'base64'));
+    return file;
+  }
   let position = 0;
   const buffers = [];
   while (position < scrollHeight) {

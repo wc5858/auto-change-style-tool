@@ -17,7 +17,8 @@ import {
   DECLINE,
   JOIN,
   LOGOUT,
-  GET_USER_INFO
+  GET_USER_INFO,
+  DELETE_TASK
 } from './constant';
 
 export const createColor = data => ({
@@ -41,6 +42,11 @@ export const createTask = data => ({
 
 export const findTask = () => ({
   type: FIND_TASK
+});
+
+export const deleteTask = id => ({
+  type: DELETE_TASK,
+  id
 });
 
 export const createComponent = data => ({

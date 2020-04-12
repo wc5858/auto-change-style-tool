@@ -10,7 +10,7 @@ module.exports = app => {
         ctx.redirect('/login');
         return;
       }
-      const { color, component, task, team, user } = ctx.service;
+      const { color, component, task, team, user, catcher } = ctx.service;
       const [colorData, componentData, taskData, catcherData, teamData, invitation] = await Promise.all([
         color.findByUser(),
         component.findByUser(),

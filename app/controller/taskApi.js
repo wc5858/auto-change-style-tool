@@ -1,4 +1,7 @@
 const TaskExecutor = require('../lib/runner/TaskExecutor');
+const util = require('util');
+const fs = require('fs');
+const readFile = util.promisify(fs.readFile);
 
 module.exports = app => {
   return class TaskController extends app.Controller {
@@ -12,12 +15,13 @@ module.exports = app => {
         componentDataId,
         share,
         teamId,
-        ...settings
+        bgMappingType,
+        settings
       } = ctx.request.body;
       const res = await task.create({
         url,
         site,
-        settings,
+        subTasks: settings.filter(i => i),
         state: '执行中',
         creator: ctx.session.username,
         team: share ? teamId : null
@@ -30,8 +34,14 @@ module.exports = app => {
           componentDataId.map(id => component.findOne(id))
         );
         task.update(id, {
-          colorDataName: colorData.site,
-          componentDataNames: componentRecords.map(i => i.site)
+          colorDataName: {
+            colorDataId: id,
+            name: colorData.site
+          },
+          componentDataNames: componentRecords.map(i => ({
+            componentDataId: i._id,
+            name: i.site
+          }))
         });
         const componentDatas = (
           await Promise.all(
@@ -45,40 +55,54 @@ module.exports = app => {
           [],
           componentDatas
         );
-        const taskExecutor = new TaskExecutor(
-          {
-            url,
-            colorData,
-            site,
-            componentData: flattenComponentData,
-            ...settings
-          },
-          {
-            headless: true,
-            beforeEachTask: taskList => {
-              task.update(id, {
-                taskList
-              });
+        return await Promise.all(settings.filter(i => i).map(async (setting, idx) => {
+          const updateTaskList = taskList => {
+            task.update(id, { $set: { [`subTasks.${idx}.taskList`]: taskList } });
+          };
+          const taskExecutor = new TaskExecutor(
+            {
+              url,
+              colorData,
+              site,
+              componentData: flattenComponentData,
+              bgMappingType,
+              ...setting
             },
-            onEachTaskEnd: taskList => {
-              task.update(id, {
-                taskList
-              });
+            {
+              headless: true,
+              beforeEachTask: updateTaskList,
+              onEachTaskEnd: updateTaskList
             }
+          );
+          await taskExecutor.init();
+          await taskExecutor.replaceComponent();
+          await taskExecutor.changeColor();
+          await taskExecutor.optimization();
+          await taskExecutor.evaluate();
+          const result = await taskExecutor.finish();
+          if (result.success) {
+            const file = await fs.write(JSON.stringify(result.data), `${site}-${idx}-${+new Date()}`);
+            task.update(id, {
+              $set: { 
+                [`subTasks.${idx}.success`]: true,
+                [`subTasks.${idx}.dataFile`]: file
+              }
+            });
+          } else {
+            task.update(id, {
+              $set: { 
+                [`subTasks.${idx}.success`]: false
+              }
+            });
           }
-        );
-        await taskExecutor.init();
-        await taskExecutor.replaceComponent();
-        await taskExecutor.changeColor();
-        await taskExecutor.optimization();
-        return await taskExecutor.finish();
+          return result.success;
+        }))
       };
       runner()
-        .then(result => {
-          if (result.success) {
+        .then(results => {
+          if (results.every(i => i)) {
             task.update(id, {
-              state: '执行结束',
-              result: result.data
+              state: '执行结束'
             });
           } else {
             task.update(id, {
@@ -100,11 +124,29 @@ module.exports = app => {
 
     async findTask() {
       const { ctx } = this;
-      const { task } = ctx.service;
+      const { task, fs } = ctx.service;
       const data = await task.findByUser();
+      await Promise.all(data.map(async i => {
+        return await Promise.all(i.subTasks.map(async j => {
+          if (j.dataFile) {
+            j.data = JSON.parse(await fs.read(j.dataFile.filename));
+          }
+          return;
+        }));
+      }));
       ctx.body = {
         success: true,
         data
+      };
+    }
+    
+    async deleteTask() {
+      const { ctx } = this;
+      const { task } = ctx.service;
+      const data = ctx.request.body;
+      await task.delete(data.id);
+      ctx.body = {
+        success: true
       };
     }
 
@@ -114,6 +156,16 @@ module.exports = app => {
       ctx.body = {
         success: true,
         data: await ctx.service.task.getNanoCss(data.rawCss)
+      };
+    }
+    async imgBase64() {
+      const { ctx } = this;
+      const data = ctx.request.body;
+      const img = await readFile(data.img);
+      const imageBase64 = img.toString('base64');
+      ctx.body = {
+        success: true,
+        data: imageBase64
       };
     }
   };
