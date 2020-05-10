@@ -9,6 +9,9 @@ import {
 } from '../store/actions';
 import AddComponent from '../subComponents/addComponent';
 import { withTranslation } from 'react-i18next';
+import { getRuleTree, buildText, simplifyRuleTree } from './rules';
+
+console.log(getRuleTree)
 
 const mergeCss = css => {
   let cssString = '';
@@ -46,13 +49,56 @@ const rebuildHTML = (treeNode, isReplaced) => {
 };
 
 const listComponent = dataList => {
-  return dataList ? <div>{dataList.map(i => {
-    const html = rebuildHTML(i.node);
-    return <div style={{
-      padding: 20,
-      borderBottom: '1px solid gray'
-    }} dangerouslySetInnerHTML={{__html: html}}></div>
-  })}</div> : null;
+  if (!dataList) {
+    return null;
+  }
+  const columns = [
+    {
+      title: 'Preview',
+      dataIndex: 'node',
+      key: 'html',
+      render: node => {
+        const html = rebuildHTML(node);
+        const ruleTree = getRuleTree(node);
+        return <iframe style={{
+          width: '100%',
+          height: '100%',
+          display: 'block',
+          border: 0
+        }} src={`data:text/html,
+          <html>
+            <head>
+              <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1">
+            </head>
+            <body>${html}</body>
+          </html>
+        `}></iframe>;
+      }
+    },
+    {
+      title: 'Structure',
+      dataIndex: 'node',
+      key: 'structure',
+      render: node => {
+        const ruleTree = getRuleTree(node);
+        console.log(node)
+        return <div style={{ whiteSpace: 'pre-line' }}>{buildText(ruleTree)}</div>;
+      }
+    },
+    {
+      title: 'SimplifiedStructure',
+      dataIndex: 'node',
+      key: 'SimplifiedStructure',
+      render: node => {
+        const ruleTree = getRuleTree(node);
+        simplifyRuleTree(ruleTree);
+        return <div style={{ whiteSpace: 'pre-line' }}>{buildText(ruleTree)}</div>;
+      }
+    }
+  ];
+
+  return <Table columns={columns} dataSource={dataList} />;
 }
 
 class Component extends React.Component {

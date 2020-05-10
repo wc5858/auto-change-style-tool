@@ -3,15 +3,21 @@ const { rebuildHTML } = require('../util/domTree');
 const { getLeafComponent } = require('../util/component');
 const generatorHTML = require('../util/generatorHTML');
 const { similarity } = require('../util/htmlSimilarity');
+const { getRuleTree, buildText, simplifyRuleTree } = require('../util/rules');
 
 const searchNodeContents = node => {
   const satck = [node];
   const contents = {
     texts: [],
-    imgs: []
+    imgs: [],
+    repeatable: []
   };
   while (satck.length > 0) {
     let cur = satck.pop();
+    if (cur.isRepeatable) {
+      contents.repeatable.push(cur);
+      continue;
+    }
     if (cur.type === 'text' && cur.content) {
       contents.texts.push(cur.content);
       continue;
@@ -37,6 +43,16 @@ const replaceNodeContents = (node, source) => {
   const satck = [node];
   while (satck.length > 0) {
     let cur = satck.pop();
+    if (cur.isRepeatable) {
+      const data = source.repeatable.shift();
+      if (data) {
+        replaceRepeatable(cur, data);
+      } else {
+        // 置空
+        cur.children = [];
+      }
+      continue;
+    }
     if (!cur.info) {
       continue;
     }
@@ -69,6 +85,18 @@ const replaceNodeContents = (node, source) => {
   return node;
 };
 
+const replaceRepeatable = (node, data) => {
+  const newChildren = []
+  data.children.forEach(i => {
+    const newNode = replaceNodeContents(
+      JSON.parse(JSON.stringify(node.children[0])),
+      searchNodeContents(i)
+    );
+    newChildren.push(newNode);
+  });
+  node.children = newChildren;
+};
+
 module.exports = async function(
   driver,
   data,
@@ -84,9 +112,44 @@ module.exports = async function(
   const maxs = [];
   let sum1 = 0;
   let sum2 = 0;
-  for (const i of list) {
+
+  const listNormal = [];
+  const listHasOptionalComponents = [];
+  const listHasRepeatable = [];
+  const dataNormal = [];
+  const dataHasOptionalComponents = [];
+  const dataHasRepeatable = [];
+
+  list.forEach(i => {
+    const info = {};
+    const r = getRuleTree(i.node, info);
+    console.log(buildText(r));
+    if (info.hasRepeatable) {
+      listHasRepeatable.push(i);
+    } else if (info.hasOptionalComponents) {
+      listHasOptionalComponents.push(i);
+    } else {
+      listNormal.push(i);
+    }
+    i.ruleTree = r;
+  });
+
+  data.forEach(i => {
+    const info = {};
+    const r = getRuleTree(i.node, info);
+    if (info.hasRepeatable) {
+      dataHasRepeatable.push(i);
+    } else if (info.hasOptionalComponents) {
+      dataHasOptionalComponents.push(i);
+    } else {
+      dataNormal.push(i);
+    }
+    i.ruleTree = r;
+  });
+
+  for (const i of listNormal) {
     let max = 0;
-    for (const j of data) {
+    for (const j of dataNormal) {
       const { s: score, time1, time2 } = similarity(i, j);
       sum1 += time1;
       sum2 += time2;
@@ -112,6 +175,62 @@ module.exports = async function(
     }
   }
 
+  for (const i of listHasRepeatable) {
+    let max = 0;
+    for (const j of dataHasRepeatable) {
+      const { s: score, time1, time2 } = similarity(i, j);
+      sum1 += time1;
+      sum2 += time2;
+      if (score > max) {
+        max = score;
+        i.similarity = j;
+      }
+      // 找到合适的就不再继续查找
+      if (max >= options.threshold1) {
+        break;
+      }
+    }
+    maxs.push(max);
+    // 找到匹配项大于这个阈值时才执行替换
+    const fixedThreshold2 = options.threshold2 * (1 + Math.PI / 2 - Math.atan(i.tagSequence.length));
+    if (max > fixedThreshold2) {
+      // 执行一次深拷贝
+      const copyNode = JSON.parse(JSON.stringify(i.similarity.node));
+      map[i.node.id] = replaceNodeContents(
+        copyNode,
+        searchNodeContents(i.node)
+      );
+    }
+  }
+
+  for (const i of listHasOptionalComponents) {
+    let max = 0;
+    for (const j of dataHasOptionalComponents) {
+      const { s: score, time1, time2 } = similarity(i, j);
+      sum1 += time1;
+      sum2 += time2;
+      if (score > max) {
+        max = score;
+        i.similarity = j;
+      }
+      // 找到合适的就不再继续查找
+      if (max >= options.threshold1) {
+        break;
+      }
+    }
+    maxs.push(max);
+    // 找到匹配项大于这个阈值时才执行替换
+    const fixedThreshold2 = options.threshold2 * (1 + Math.PI / 2 - Math.atan(i.tagSequence.length));
+    if (max > fixedThreshold2) {
+      // 执行一次深拷贝
+      const copyNode = JSON.parse(JSON.stringify(i.similarity.node));
+      map[i.node.id] = replaceNodeContents(
+        copyNode,
+        searchNodeContents(i.node)
+      );
+    }
+  }
+  
   const usedId = [];
 
   let originCssUsed = new Set();
