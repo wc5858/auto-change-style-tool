@@ -46,7 +46,7 @@
     "mockjs": "^1.0.1-beta3",
     "moment": "^2.17.1",
     "mongoose-gridfs": "^1.2.14",
-    "postcss": "^7.0.24",
+    "postcss": "^8.2.10",
     "postcss-safe-parser": "^4.0.1",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
